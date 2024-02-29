@@ -22,7 +22,7 @@ module NETSNMP
 
         *request_headers, varbinds = request.value
 
-        request_id, error_status, error_index = request_headers.map(&:value).map(&:to_i)
+        request_id, error_status, error_index = request_headers.map { |x| x.value.to_i }
 
         varbs = varbinds.value.map do |varbind|
           oid_asn, val_asn = varbind.value
