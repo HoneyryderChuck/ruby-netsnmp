@@ -91,16 +91,31 @@ module NETSNMP
 
       SOCK_FLAGS = Socket.const_defined?(:MSG_DONTWAIT) ? Socket::MSG_DONTWAIT : 0
 
-      def write(payload)
-        perform_io do
-          @socket.sendmsg(payload, SOCK_FLAGS, @destaddr)
+      if RUBY_ENGINE == "jruby"
+        def write(payload)
+          perform_io do
+            @socket.send(payload, SOCK_FLAGS, @destaddr)
+          end
         end
-      end
 
-      def recv(bytesize = MAXPDUSIZE)
-        perform_io do
-          datagram, = @socket.recvmsg_nonblock(bytesize, SOCK_FLAGS)
-          datagram
+        def recv(bytesize = MAXPDUSIZE)
+          perform_io do
+            datagram, = @socket.recv_nonblock(bytesize, SOCK_FLAGS)
+            datagram
+          end
+        end
+      else
+        def write(payload)
+          perform_io do
+            @socket.sendmsg(payload, SOCK_FLAGS, @destaddr)
+          end
+        end
+
+        def recv(bytesize = MAXPDUSIZE)
+          perform_io do
+            datagram, = @socket.recvmsg_nonblock(bytesize, SOCK_FLAGS)
+            datagram
+          end
         end
       end
 
