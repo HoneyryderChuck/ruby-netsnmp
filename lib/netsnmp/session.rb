@@ -89,15 +89,17 @@ module NETSNMP
         recv
       end
 
+      SOCK_FLAGS = Socket.const_defined?(:MSG_DONTWAIT) ? Socket::MSG_DONTWAIT : 0
+
       def write(payload)
         perform_io do
-          @socket.sendmsg(payload, Socket::MSG_DONTWAIT, @destaddr)
+          @socket.sendmsg(payload, SOCK_FLAGS, @destaddr)
         end
       end
 
       def recv(bytesize = MAXPDUSIZE)
         perform_io do
-          datagram, = @socket.recvmsg_nonblock(bytesize, Socket::MSG_DONTWAIT)
+          datagram, = @socket.recvmsg_nonblock(bytesize, SOCK_FLAGS)
           datagram
         end
       end
