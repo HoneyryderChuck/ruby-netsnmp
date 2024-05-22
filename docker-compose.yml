@@ -7,7 +7,7 @@ services:
       - CI=1
       - BUNDLE_SILENCE_ROOT_WARNING=1
       - BUNDLE_JOBS=10
-    image: ruby:alpine
+    image: ruby
     depends_on:
       - snmp-server-emulator
     volumes:

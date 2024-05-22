@@ -1,4 +1,4 @@
 version: '3'
 services:
   netsnmp:
-    image: ruby:3.2-alpine
+    image: ruby:3.2
