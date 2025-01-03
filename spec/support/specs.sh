@@ -7,17 +7,12 @@ RUBY_ENGINE=`ruby -e 'puts RUBY_ENGINE'`
 if [[ "$RUBY_ENGINE" = "truffleruby" ]]; then
   dnf install -y git net-snmp-utils
 elif [[ "$RUBY_ENGINE" = "jruby" ]]; then
-echo "
-deb http://deb.debian.org/debian/ buster main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free
-deb http://security.debian.org/debian-security buster/updates main contrib non-free" > /etc/apt/sources.list
-
   apt-get update
   apt-get install -y snmp-mibs-downloader
 else
 echo "
 deb http://deb.debian.org/debian/ buster main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free" > /etc/apt/sources.list
+deb http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
 
   apt-get update
   apt-get install -y snmp-mibs-downloader

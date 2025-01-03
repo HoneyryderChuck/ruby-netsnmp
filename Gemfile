@@ -10,14 +10,13 @@ gem "rspec", "~> 3.5"
 
 platform :mri, :truffleruby do
   gem "xorcist", require: false
+  gem "rbs"
 end
 
 if RUBY_VERSION >= "3.0.0"
   gem "rubocop"
   gem "rubocop-performance"
 end
-
-gem "rbs" if RUBY_VERSION >= "3.0"
 
 if RUBY_VERSION < "2.3"
   gem "simplecov", "< 0.11.0"
