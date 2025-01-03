@@ -176,9 +176,9 @@ module NETSNMP
     end
 
     def freeze
-      super
       @modules_loaded.each(&:freeze).freeze
       @object_identifiers.each_key(&:freeze).each_value(&:freeze).freeze
+      super
     end
   end
 end

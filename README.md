@@ -219,7 +219,7 @@ end
 
 ## Compatibility
 
-This library supports and is tested against ruby versions 2.1 or more recent, including ruby 3. It also supports and tests against Truffleruby.
+This library supports and is tested against ruby versions 2.4 or more recent, including ruby 3. It also supports and tests against Truffleruby.
 
 ## OpenSSL
 

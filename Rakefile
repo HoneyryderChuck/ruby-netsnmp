@@ -34,7 +34,7 @@ task default: [:spec]
 
 namespace :spec do
   desc "runs tests, check coverage, pushes to coverage server"
-  if RUBY_VERSION >= "3.0.0"
+  if RUBY_ENGINE == "ruby" && RUBY_VERSION >= "3.0.0"
     task ci: %w[spec rubocop]
   else
     task ci: %w[spec]

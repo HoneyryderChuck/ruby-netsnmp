@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -7,14 +7,15 @@ RUBY_ENGINE=`ruby -e 'puts RUBY_ENGINE'`
 if [[ "$RUBY_ENGINE" = "truffleruby" ]]; then
   dnf install -y git net-snmp-utils
 elif [[ "$RUBY_ENGINE" = "jruby" ]]; then
- echo "
-deb http://deb.debian.org/debian/ buster main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free
-deb http://security.debian.org/debian-security buster/updates main contrib non-free" >> /etc/apt/sources.list
   apt-get update
-  apt-get install -y git snmp-mibs-downloader
+  apt-get install -y snmp-mibs-downloader
 else
-  apk --update add g++ make git net-snmp-libs
+echo "
+deb http://deb.debian.org/debian/ buster main contrib non-free
+deb http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
+
+  apt-get update
+  apt-get install -y snmp-mibs-downloader
 fi
 
 gem install bundler -v="1.17.3" --no-doc --conservative
@@ -23,17 +24,25 @@ cd /home
 bundle -v
 bundle install
 
-mkdir -p /etc/ssl
-touch /etc/ssl/openssl.cnf
-cat <<EOT >> /etc/ssl/openssl.cnf
+touch openssl_legacy.cnf
+cat <<EOT > openssl_legacy.cnf
+.include = /usr/lib/ssl/openssl.cnf
+
+[openssl_init]
+providers = provider_sect
+
 [provider_sect]
 default = default_sect
 legacy = legacy_sect
+
 [default_sect]
 activate = 1
+
 [legacy_sect]
 activate = 1
 EOT
+export OPENSSL_CONF=/home/openssl_legacy.cnf
+
 
 if [[ ${RUBY_VERSION:0:1} = "3" ]]; then
   export RUBYOPT='-rbundler/setup -rrbs/test/setup'

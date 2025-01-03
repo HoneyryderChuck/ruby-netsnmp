@@ -7,7 +7,7 @@ RSpec.describe NETSNMP::V3Session do
       priv_protocol: :des, security_level: :auth_priv }
   end
   it "generates the security parameters handler" do
-    sess = described_class.new(**security_options.merge(host: SNMPHOST, port: SNMPPORT))
+    sess = described_class.new(**security_options, host: SNMPHOST, port: SNMPPORT)
     # not generated yet
     expect(sess.instance_variable_get(:@security_parameters)).to be_a(NETSNMP::SecurityParameters)
   end

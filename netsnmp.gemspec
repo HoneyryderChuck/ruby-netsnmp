@@ -30,5 +30,5 @@ Gem::Specification.new do |gem|
   gem.files = Dir["LICENSE.txt", "README.md", "AUTHORS", "lib/**/*.rb", "sig/**/*.rbs"]
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "parslet"
+  gem.add_dependency "parslet"
 end
