@@ -17,6 +17,8 @@ module NETSNMP
                  when :aes, :aes128 then OpenSSL::Cipher.new("aes-128-cfb")
                  when :aes192 then OpenSSL::Cipher.new("aes-192-cfb")
                  when :aes256 then OpenSSL::Cipher.new("aes-256-cfb")
+                 else
+                   raise Error, "unsupported cipher"
                  end
 
         iv, salt = generate_encryption_key(engine_boots, engine_time)
@@ -26,7 +28,7 @@ module NETSNMP
                     when :aes, :aes128 then iv[0, 16]
                     when :aes192 then iv[0, 24]
                     when :aes256 then iv[0, 32]
-                    end
+                    end || ""
         cipher.key = aes_key
 
         if (diff = decrypted_data.length % 8) != 0
@@ -45,6 +47,8 @@ module NETSNMP
                  when :aes, :aes128 then OpenSSL::Cipher.new("aes-128-cfb")
                  when :aes192 then OpenSSL::Cipher.new("aes-192-cfb")
                  when :aes256 then OpenSSL::Cipher.new("aes-256-cfb")
+                 else
+                  raise Error, "unsupported cipher"
                  end
         cipher.padding = 0
 
@@ -56,7 +60,7 @@ module NETSNMP
                     when :aes, :aes128 then iv[0..16]
                     when :aes192 then iv[0..24]
                     when :aes256 then iv[0..32]
-                    end
+                    end || ""
         decrypted_data = cipher.update(encrypted_data) + cipher.final
 
         hlen, bodylen = OpenSSL::ASN1.traverse(decrypted_data) { |_, _, x, y, *| break x, y }
@@ -82,7 +86,7 @@ module NETSNMP
              when :aes, :aes128 then iv[0, 16]
              when :aes192 then iv[0, 24]
              when :aes256 then iv[0, 32]
-             end
+             end || ""
 
         [iv, salt]
       end
@@ -103,7 +107,7 @@ module NETSNMP
         when :aes, :aes128 then @priv_key[0, 16]
         when :aes192 then @priv_key[0, 24]
         when :aes256 then @priv_key[0, 32]
-        end
+        end || ""
       end
     end
   end
