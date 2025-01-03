@@ -1,7 +1,7 @@
 version: '3'
 services:
   netsnmp:
-    image: ghcr.io/graalvm/truffleruby:latest
+    image: ghcr.io/graalvm/truffleruby-community:latest
     entrypoint:
       - bash
       - /home/spec/support/specs.sh
