@@ -48,7 +48,7 @@ module NETSNMP
                  when :aes192 then OpenSSL::Cipher.new("aes-192-cfb")
                  when :aes256 then OpenSSL::Cipher.new("aes-256-cfb")
                  else
-                  raise Error, "unsupported cipher"
+                   raise Error, "unsupported cipher"
                  end
         cipher.padding = 0
 
