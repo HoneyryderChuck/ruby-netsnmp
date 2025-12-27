@@ -27,18 +27,16 @@ jobs:
           - "ruby-3.2"
           - "ruby-3.3"
           - "ruby-3.4"
+          - "ruby-4.0"
           - "jruby"
           - "truffleruby"
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache gems
-        uses: actions/cache@v2
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
         with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
       - name: Run tests
         uses: adambirds/docker-compose-action@v1.5.0
         with:
