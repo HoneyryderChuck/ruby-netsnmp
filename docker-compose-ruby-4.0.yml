@@ -1,0 +1,4 @@
+version: '3'
+services:
+  netsnmp:
+    image: ruby:4.0
