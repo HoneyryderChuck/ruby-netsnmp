@@ -714,7 +714,7 @@ module NETSNMP::MIB
     end
 
     rule(:comment_line) do
-      (match('\-\-') >> match('[^\n]').repeat >> match('\n'))
+      match('\-\-') >> match('[^\n]').repeat >> match('\n')
     end
 
     rule(:space?) { space.maybe }

@@ -67,7 +67,7 @@ module NETSNMP
     #     MIB.load("SNMPv2-MIB.txt")
     #     MIB.load("/path/to/SNMPv2-MIB.txt")
     #
-    def load(mod)
+    def load(mod) # rubocop:disable Naming/PredicateMethod
       unless File.file?(mod)
         moddir = nil
         MIBDIRS.each do |mibdir|
@@ -159,13 +159,13 @@ module NETSNMP
       return unless imports
 
       imports = [imports] unless imports.respond_to?(:to_ary)
-      imports.each_with_object({}) do |import, imp|
-        imp[String(import[:name])] = case import[:ids]
-                                     when Hash
-                                       [String(import[:ids][:name])]
-                                     else
-                                       import[:ids].map { |id| String(id[:name]) }
-                                     end
+      imports.to_h do |import|
+        [String(import[:name]), case import[:ids]
+                                when Hash
+                                  [String(import[:ids][:name])]
+                                else
+                                  import[:ids].map { |id| String(id[:name]) }
+                                end]
       end
     end
 

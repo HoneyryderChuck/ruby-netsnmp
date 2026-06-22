@@ -4,6 +4,7 @@
 module CelluloidHelpers
   class WrapperActor
     include ::Celluloid::IO
+
     execute_block_on_receiver :wrap
 
     def wrap

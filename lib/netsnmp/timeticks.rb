@@ -33,19 +33,19 @@ module NETSNMP
     end
 
     def +(other)
-      Timetick.new((to_i + other.to_i))
+      Timetick.new(to_i + other.to_i)
     end
 
     def -(other)
-      Timetick.new((to_i - other.to_i))
+      Timetick.new(to_i - other.to_i)
     end
 
     def *(other)
-      Timetick.new((to_i * other.to_i))
+      Timetick.new(to_i * other.to_i)
     end
 
     def /(other)
-      Timetick.new((to_i / other.to_i))
+      Timetick.new(to_i / other.to_i)
     end
 
     private

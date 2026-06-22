@@ -9,6 +9,7 @@ else
 
   RSpec.describe "with cellulloid", type: :celluloid do
     include CelluloidHelpers
+
     let(:user_options) do
       { username: "authprivmd5des", auth_password: "maplesyrup",
         auth_protocol: :md5, priv_password: "maplesyrup",
