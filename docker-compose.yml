@@ -1,4 +1,6 @@
-version: '3'
+volumes:
+  bundle:
+
 services:
   netsnmp:
     environment:
@@ -7,10 +9,12 @@ services:
       - CI=1
       - BUNDLE_SILENCE_ROOT_WARNING=1
       - BUNDLE_JOBS=10
+      - GEM_HOME=/usr/local/bundle
     image: ruby
     depends_on:
       - snmp-server-emulator
     volumes:
+      - bundle:/usr/local/bundle
       - ./:/home
     entrypoint:
       /home/spec/support/specs.sh
