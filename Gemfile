@@ -13,8 +13,8 @@ platform :mri, :truffleruby do
 end
 
 platform :mri do
-  if RUBY_VERSION >= "3.0.0"
-    gem "celluloid-io", "~> 0.17" if RUBY_VERSION >= "2.3.0"
+  if RUBY_VERSION >= "3.2.0"
+    gem "celluloid-io", "~> 0.17"
     gem "rbs"
     gem "rubocop"
     gem "rubocop-performance"
