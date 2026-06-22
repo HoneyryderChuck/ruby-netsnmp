@@ -11,8 +11,8 @@ elif [[ "$RUBY_ENGINE" = "jruby" ]]; then
   apt-get install -y snmp-mibs-downloader
 else
 echo "
-deb http://deb.debian.org/debian/ buster main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
+deb http://deb.debian.org/debian/ trixie main contrib non-free
+deb http://deb.debian.org/debian/ trixie-updates main contrib non-free" >> /etc/apt/sources.list
 
   apt-get update
   apt-get install -y snmp-mibs-downloader
