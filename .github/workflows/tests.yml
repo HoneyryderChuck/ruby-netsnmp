@@ -41,9 +41,9 @@ jobs:
         uses: adambirds/docker-compose-action@v1.5.0
         with:
           compose-file: |
-            docker-compose.yml
-            docker-compose-github.yml
-            docker-compose-${{matrix.ruby}}.yml
+            ./docker-compose.yml
+            ./docker-compose-github.yml
+            ./docker-compose-${{matrix.ruby}}.yml
           test-container: netsnmp
           test-command: /home/spec/support/specs.sh
         continue-on-error: ${{ matrix.ruby == 'jruby' || matrix.ruby == 'truffleruby' }}
