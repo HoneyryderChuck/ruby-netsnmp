@@ -5,8 +5,8 @@ ruby RUBY_VERSION
 
 gemspec
 
-gem "rake", "~> 12.3"
-gem "rspec", "~> 3.5"
+gem "rake"
+gem "rspec"
 
 platform :mri, :truffleruby do
   gem "xorcist", require: false
