@@ -26,7 +26,9 @@ namespace :coverage do
     return unless ENV.key?("CI")
 
     require "simplecov"
-    SimpleCov.collate Dir["coverage/**/.resultset.json"]
+    SimpleCov.collate Dir["coverage/**/.resultset.json"] do
+      minimum_coverage 95
+    end
   end
 end
 

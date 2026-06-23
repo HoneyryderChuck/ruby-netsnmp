@@ -48,7 +48,39 @@ jobs:
         continue-on-error: ${{ matrix.ruby == 'jruby' || matrix.ruby == 'truffleruby' }}
       - name: Upload coverage
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: coverage-report-${{matrix.ruby}}
+          name: coverage-${{matrix.ruby}}
           path: coverage/
+          include-hidden-files: true
+
+  coverage:
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+
+      - name: Download coverage results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          path: coverage
+
+      - name: coverage
+        env:
+          CI: 1
+        run: |
+          ls -R
+          find coverage -name "*resultset.json" -exec sed -i 's?${{ github.workspace }}?'`pwd`'?' {} \;
+          bundle exec rake coverage:report
+
+      - uses: joshmfrankel/simplecov-check-action@main
+        if: ${{ github.repository == 'HoneyryderChuck/ruby-netsnmp' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
