@@ -1,4 +1,8 @@
 module NETSNMP
+  type auth_protocol = :md5 | :sha | :sha1 | :sha224 | :sha256 | :sha384 | :sha512
+
+  type priv_protocol = :aes | :aes128 | :aes192 | :aes256 | :des
+
   class SecurityParameters
     include Loggable
 
@@ -10,7 +14,7 @@ module NETSNMP
 
     @auth_pass_key: String
     @priv_pass_key: String
-    @priv_protocol: Symbol?
+    @priv_protocol: priv_protocol?
     @digest: OpenSSL::Digest
     @encryption: (Encryption::AES | Encryption::DES)?
     @timeliness: Integer
@@ -18,7 +22,7 @@ module NETSNMP
     attr_reader security_level: Integer
     attr_reader username: String
     attr_reader engine_id: String
-    attr_reader auth_protocol: Symbol?
+    attr_reader auth_protocol: auth_protocol?
 
     def engine_id=: (String id) -> void
 
@@ -38,9 +42,9 @@ module NETSNMP
       username: String,
       ?engine_id: String,
       ?security_level: Integer | :noauth | :auth_no_priv | :auth_priv | nil,
-      ?auth_protocol: Symbol | nil,
+      ?auth_protocol: auth_protocol?,
       ?auth_password: String | nil,
-      ?priv_protocol: Symbol | nil,
+      ?priv_protocol: priv_protocol?,
       ?priv_password: String | nil,
       **untyped options
     ) -> void
