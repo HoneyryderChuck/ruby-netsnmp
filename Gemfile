@@ -5,16 +5,16 @@ ruby RUBY_VERSION
 
 gemspec
 
-gem "rake", "~> 12.3"
-gem "rspec", "~> 3.5"
+gem "rake"
+gem "rspec"
 
 platform :mri, :truffleruby do
   gem "xorcist", require: false
 end
 
 platform :mri do
-  if RUBY_VERSION >= "3.0.0"
-    gem "celluloid-io", "~> 0.17" if RUBY_VERSION >= "2.3.0"
+  if RUBY_VERSION >= "3.2.0"
+    gem "celluloid-io", "~> 0.17"
     gem "rbs"
     gem "rubocop"
     gem "rubocop-performance"

@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
+
+export LANG=C.UTF-8
+export LANGUAGE=C.UTF-8
 
 RUBY_ENGINE=`ruby -e 'puts RUBY_ENGINE'`
 
@@ -8,19 +11,21 @@ if [[ "$RUBY_ENGINE" = "truffleruby" ]]; then
   dnf install -y git net-snmp-utils
 elif [[ "$RUBY_ENGINE" = "jruby" ]]; then
   apt-get update
-  apt-get install -y snmp-mibs-downloader
+  apt-get install -y snmp-mibs-downloader build-essential
 else
-echo "
-deb http://deb.debian.org/debian/ buster main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
+  cat /etc/os-release
+  DISTRO_CODENAME=$(grep VERSION_CODENAME /etc/os-release | cut -d = -f 2)
+  echo "
+deb http://deb.debian.org/debian/ $DISTRO_CODENAME main contrib non-free
+deb http://deb.debian.org/debian/ $DISTRO_CODENAME-updates main contrib non-free" >> /etc/apt/sources.list
 
   apt-get update
-  apt-get install -y snmp-mibs-downloader
+  apt-get install -y snmp-mibs-downloader build-essential
 fi
 
-gem install bundler -v="1.17.3" --no-doc --conservative
 cd /home
 
+bundle update --bundler
 bundle -v
 bundle install
 

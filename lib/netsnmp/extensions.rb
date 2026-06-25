@@ -5,7 +5,7 @@ module NETSNMP
     refine String do
       def integer?
         each_byte do |byte|
-          return false unless byte >= 48 && byte <= 57
+          return false unless byte.between?(48, 57)
         end
         true
       end
