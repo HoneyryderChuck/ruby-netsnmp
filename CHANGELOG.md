@@ -2,6 +2,10 @@
 
 ## master
 
+#### Bugfixes
+
+* Auth and priv passwords are no longer limited to 32 characters (RFC 3414 sets no upper bound).
+
 ### 0.7.1
 
 #### Bugfixes
