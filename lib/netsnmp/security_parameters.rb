@@ -62,13 +62,13 @@ module NETSNMP
       if @security_level.positive?
         @auth_protocol ||= :md5 # this is the default
         raise "security level requires an auth password" if auth_password.nil?
-        raise "auth password must have between 8 to 32 characters" unless (8..32).cover?(auth_password.length)
+        raise "auth password must have at least 8 characters" if auth_password.length < 8
       end
 
       if @security_level > 1
         @priv_protocol ||= :des
         raise "security level requires a priv password" if priv_password.nil?
-        raise "priv password must have between 8 to 32 characters" unless (8..32).cover?(priv_password.length)
+        raise "priv password must have at least 8 characters" if priv_password.length < 8
       end
 
       @auth_pass_key = passkey(auth_password) if auth_password

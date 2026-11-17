@@ -120,6 +120,32 @@ RSpec.describe NETSNMP::SecurityParameters do
       expect(sha512_sec.send(:priv_key)).to eq("\"\xA5\xA3l\xED\xFC\xC0\x85\x80z\x12\x8D{\xC6\xC28!g\xADl\r\xBC_\xDF\xF8Vt\x0F=\x84\xC0\x99\xAD" \
                                                "\x1E\xA8z\x8D\xB0\x96qM\x97\x88\xBDT@G\xC9\x02\x1EB)\xCE'\xE4\xC0\xA6\x92P\xAD\xFC\xFF\xBB\v".b)
     end
+
+    # RFC 3414 sets no upper bound on passwords: keys computed with an independent implementation of A.2.2
+    context "with passwords longer than 32 characters" do
+      let(:long_sec) do
+        described_class.new(security_level: :auth_priv,
+                            auth_protocol: :sha,
+                            priv_protocol: :aes,
+                            username: "username",
+                            auth_password: "abcdefghijklmnopqrstuvwxyz0123456789!",
+                            priv_password: "abcdefghijklmnopqrstuvwxyz0123456789" * 3,
+                            engine_id: engine_id)
+      end
+      it do
+        expect(long_sec.send(:auth_key)).to eq("\xc8\xaf\x2c\x1f\x1b\xdc\xe1\x3c\x8c\xde\xe9\x61\xf9\x9c\x98\xba\x1e\x3a\x87\x58".b)
+        expect(long_sec.send(:priv_key)).to eq("\x92\x32\x5d\xd2\xa6\x93\x20\x3d\xd5\xb6\x36\xd4\x0a\x79\x72\xce\x85\x47\x7f\x56".b)
+      end
+    end
+  end
+
+  describe "password length" do
+    let(:security_options) do
+      { username: "username", security_level: :auth_priv, auth_protocol: :sha, priv_protocol: :aes,
+        auth_password: "maplesyrup", priv_password: "maplesyrup" }
+    end
+    it { expect { described_class.new(**security_options, auth_password: "short") }.to raise_error("auth password must have at least 8 characters") }
+    it { expect { described_class.new(**security_options, priv_password: "short") }.to raise_error("priv password must have at least 8 characters") }
   end
 
   context "#must_revalidate?" do
