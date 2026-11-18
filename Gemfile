@@ -21,14 +21,9 @@ platform :mri do
   end
 end
 
-if RUBY_VERSION < "2.3"
-  gem "simplecov", "< 0.11.0"
-elsif RUBY_VERSION < "2.4"
-  gem "docile", "< 1.4.0"
-  gem "simplecov", "< 0.19.0"
-elsif RUBY_VERSION < "2.5"
-  gem "docile", "< 1.4.0"
-  gem "simplecov", "< 0.21.0"
-else
-  gem "simplecov"
+if RUBY_VERSION >= "3.2.0"
+  group :coverage do
+    gem "repo-small-badge", require: false
+    gem "simplecov", ">= 1.0.0", require: false
+  end
 end

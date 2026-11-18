@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/netsnmp.svg)](http://rubygems.org/gems/netsnmp)
 ![Tests](https://github.com/HoneyryderChuck/ruby-netsnmp/workflows/Tests/badge.svg)
-[![Code Climate](https://codeclimate.com/github/HoneyryderChuck/ruby-netsnmp/badges/gpa.svg)](https://codeclimate.com/github/HoneyryderChuck/ruby-netsnmp)
+[![coverage report](https://honeyryderchuck.github.io/ruby-netsnmp/merged/badge_total.svg)](https://honeyryderchuck.github.io/ruby-netsnmp/merged/#_AllFiles)
 [![Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/HoneyryderChuck/ruby-netsnmp/master)
 
 The `netsnmp` gem provides a ruby native implementation of the SNMP protocol (v1/2c abd v3).

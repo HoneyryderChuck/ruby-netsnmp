@@ -2,21 +2,22 @@
 
 GC.auto_compact = true if GC.respond_to?(:auto_compact=)
 
-if ENV.key?("CI")
+if ENV.key?("CI") && RUBY_VERSION >= "3.2.0"
   require "simplecov"
-  SimpleCov.command_name "#{RUBY_ENGINE}-#{RUBY_VERSION}"
-  SimpleCov.coverage_dir "coverage/#{RUBY_ENGINE}-#{RUBY_VERSION}"
-end
-
-if defined?(SimpleCov)
   SimpleCov.start do
-    add_filter ".bundle"
-    add_filter "/spec/"
+    merging true
+    finalize_merge false
   end
 end
 
 require "bundler/setup"
 Bundler.require(:default, :test)
+
+if RUBY_VERSION >= "3.4.0"
+  Warning.categories.each do |cat|
+    Warning[cat] = true
+  end
+end
 
 require "netsnmp"
 

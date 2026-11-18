@@ -5,7 +5,8 @@ set -euo pipefail
 export LANG=C.UTF-8
 export LANGUAGE=C.UTF-8
 
-RUBY_ENGINE=`ruby -e 'puts RUBY_ENGINE'`
+export RUBY_ENGINE=`ruby -e 'puts RUBY_ENGINE'`
+export RUBY_VERSION=`ruby -e 'puts RUBY_VERSION'`
 
 if [[ "$RUBY_ENGINE" = "truffleruby" ]]; then
   dnf install -y git net-snmp-utils
