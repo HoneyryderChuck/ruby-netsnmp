@@ -103,8 +103,8 @@ module NETSNMP::MIB
     rule(:imported_keyword) do
       imported_smi_keyword |
         str("BITS") |
-        str("Integer32")  |
-        str("IpAddress")  |
+        str("Integer32") |
+        str("IpAddress") |
         str("MANDATORY-GROUPS") |
         str("MODULE-COMPLIANCE") |
         str("MODULE-IDENTITY") |
