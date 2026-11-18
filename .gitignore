@@ -8,6 +8,7 @@
 /Gemfile.lock
 /vendor
 .env
+.gem_rbs_collection/
 
 *.DS_Store
 *.sw[po]
