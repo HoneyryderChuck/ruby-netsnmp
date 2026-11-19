@@ -3,5 +3,5 @@
 SimpleCov.skip ".bundle/"
 SimpleCov.skip "vendor/"
 SimpleCov.skip "spec/"
-SimpleCov.command_name "#{RUBY_PLATFORM}/#{RUBY_ENGINE}-#{RUBY_VERSION}"
-SimpleCov.coverage_dir ENV.fetch("COVERAGE_DIR") { "coverage/#{RUBY_PLATFORM}/#{RUBY_ENGINE}-#{RUBY_VERSION}" }
+SimpleCov.command_name "#{RUBY_ENGINE}-#{RUBY_VERSION}"
+SimpleCov.coverage_dir ENV.fetch("COVERAGE_DIR") { "coverage/#{RUBY_ENGINE}-#{RUBY_VERSION}" }

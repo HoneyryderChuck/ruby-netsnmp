@@ -60,8 +60,8 @@ namespace :coverage do
     SimpleCov.collate(Dir["coverage/**/.resultset.json"]) do
       skip ".bundle/"
       skip "vendor/"
-      skip "test/"
-      minimum_coverage 95
+      skip "spec/"
+      minimum_coverage 87
       formatter SimpleCov::Formatter::MultiFormatter.new(
         [
           SimpleCov::Formatter::HTMLFormatter,

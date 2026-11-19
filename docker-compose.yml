@@ -19,6 +19,12 @@ services:
     entrypoint:
       /home/spec/support/specs.sh
 
+  netsnmp_no_xorcist:
+    extends: nextsnmp
+    environment:
+      - NO_XORCIST=1
+      - COVERAGE_DIR=coverage/no-xorcist
+
   snmp-server-emulator:
     image: tandrup/snmpsim:latest
     ports:

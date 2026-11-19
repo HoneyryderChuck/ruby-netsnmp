@@ -8,8 +8,10 @@ gemspec
 gem "rake"
 gem "rspec"
 
-platform :mri, :truffleruby do
-  gem "xorcist", require: false
+unless ENV.key?("NO_XORCIST")
+  platform :mri, :truffleruby do
+    gem "xorcist", require: false
+  end
 end
 
 platform :mri do
