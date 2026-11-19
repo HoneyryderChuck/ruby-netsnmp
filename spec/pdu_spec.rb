@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "spec_helper"
+
 RSpec.describe NETSNMP::PDU do
   let(:get_request_oid) { ".1.3.6.1.2.1.1.1.0" }
   let(:encoded_get_pdu) do

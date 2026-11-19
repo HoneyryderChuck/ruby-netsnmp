@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "spec_helper"
+
 RSpec.describe NETSNMP::V3Session do
   let(:security_options) do
     { username: "authprivmd5des", auth_password: "maplesyrup",

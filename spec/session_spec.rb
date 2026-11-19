@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "spec_helper"
+
 RSpec.describe NETSNMP::Session do
   let(:host) { SNMPHOST }
   let(:options) do

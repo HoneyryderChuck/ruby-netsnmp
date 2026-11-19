@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "spec_helper"
+
 # FROM https://tools.ietf.org/html/rfc3414#appendix-A.2.1
 RSpec.describe NETSNMP::SecurityParameters do
   let(:engine_id) { "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02".b }

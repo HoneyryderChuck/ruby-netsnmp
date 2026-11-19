@@ -18,7 +18,7 @@ if RUBY_VERSION >= "3.4.0"
     Warning[cat] = true
   end
 end
-
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "netsnmp"
 
 SNMPPORT = ENV.fetch("SNMP_PORT", 1161).to_i

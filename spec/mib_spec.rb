@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "spec_helper"
+
 RSpec.describe NETSNMP::MIB do
   describe ".oid" do
     it { expect(described_class.oid("1.2.3.4")).to eq("1.2.3.4") }
