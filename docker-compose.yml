@@ -20,7 +20,7 @@ services:
       /home/spec/support/specs.sh
 
   netsnmp_no_xorcist:
-    extends: nextsnmp
+    extends: netsnmp
     environment:
       - NO_XORCIST=1
       - COVERAGE_DIR=coverage/no-xorcist
