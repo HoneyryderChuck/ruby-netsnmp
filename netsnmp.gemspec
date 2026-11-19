@@ -31,4 +31,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "parslet"
+
+  gem.required_ruby_version = ">= 2.7.0"
 end

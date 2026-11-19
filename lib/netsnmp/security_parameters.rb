@@ -7,7 +7,7 @@ module NETSNMP
   # the arguments (consisting mostly of primitive types).
   # It also provides validation of the security options passed with a client is initialized in v3 mode.
   class SecurityParameters
-    using StringExtensions
+    using XorExtensions
     using ASNExtensions
 
     include Loggable

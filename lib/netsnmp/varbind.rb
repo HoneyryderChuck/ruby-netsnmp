@@ -4,8 +4,6 @@ module NETSNMP
   # Abstracts the PDU variable structure into a ruby object
   #
   class Varbind
-    using StringExtensions
-
     attr_reader :oid, :value
 
     def initialize(oid, value: nil, type: nil)

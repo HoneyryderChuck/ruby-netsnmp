@@ -4,8 +4,6 @@ module NETSNMP
   # Abstracts the OID structure
   #
   module OID
-    using StringExtensions
-
     OIDREGEX = /^[\d.]*$/.freeze
 
     module_function

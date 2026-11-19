@@ -12,10 +12,10 @@ module NETSNMP
   begin
     require "xorcist"
     require "xorcist/refinements"
-    StringExtensions = Xorcist::Refinements
+    XorExtensions = Xorcist::Refinements
   rescue LoadError
     # "no xorcist"
-    module StringExtensions
+    module XorExtensions
       refine String do
         # Bitwise XOR operator for the String class
         def xor(other)
@@ -53,25 +53,3 @@ require "netsnmp/encryption/des"
 require "netsnmp/encryption/aes"
 
 require "netsnmp/client"
-
-unless Numeric.method_defined?(:positive?)
-  # Ruby 2.3 Backport (Numeric#positive?)
-  #
-  module PosMethods
-    def positive?
-      self > 0
-    end
-  end
-  Numeric.__send__(:include, PosMethods)
-end
-
-unless String.method_defined?(:+@)
-  # Backport for +"", to initialize unfrozen strings from the string literal.
-  #
-  module LiteralStringExtensions
-    def +@
-      frozen? ? dup : self
-    end
-  end
-  String.__send__(:include, LiteralStringExtensions)
-end

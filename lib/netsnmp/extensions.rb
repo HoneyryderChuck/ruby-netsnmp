@@ -12,33 +12,6 @@ module NETSNMP
     end
   end
 
-  module StringExtensions
-    refine(String) do
-      unless String.method_defined?(:delete_prefix)
-        def delete_prefix(prefix)
-          prefix = String(prefix)
-          if rindex(prefix, 0)
-            self[prefix.length..-1]
-          else
-            dup
-          end
-        end
-      end
-
-      unless String.method_defined?(:match?)
-        def match?(*args)
-          !match(*args).nil?
-        end
-      end
-
-      unless String.method_defined?(:unpack1)
-        def unpack1(format)
-          unpack(format).first
-        end
-      end
-    end
-  end
-
   module ASNExtensions
     ASN_COLORS = {
       OpenSSL::ASN1::Sequence => 34, # blue
@@ -105,8 +78,6 @@ module NETSNMP
   end
 
   module Hexdump
-    using StringExtensions
-
     def self.dump(data, width: 8, in_groups_of: 4, separator: "\n")
       pairs = data.unpack1("H*").scan(/.{#{in_groups_of}}/)
       pairs.each_slice(width).map do |row|

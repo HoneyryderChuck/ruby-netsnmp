@@ -2,7 +2,7 @@
 
 module NETSNMP
   module Encryption
-    using StringExtensions
+    using XorExtensions
 
     class DES
       def initialize(priv_key, local: 0)
