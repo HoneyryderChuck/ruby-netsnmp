@@ -63,7 +63,10 @@ jobs:
             ./docker-compose-${{matrix.ruby}}.yml
           test-container: netsnmp_no_xorcist
           test-command: /home/spec/support/specs.sh
-        if: ${{ matrix.ruby == '4.0' }}
+        if: matrix.ruby == '4.0'
+      - name: Run lint
+        run:  bundle exec rake rubocop
+        if: matrix.ruby == '4.0'
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
