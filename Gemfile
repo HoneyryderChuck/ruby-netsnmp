@@ -5,8 +5,9 @@ ruby RUBY_VERSION
 
 gemspec
 
+gem "minitest"
+gem "minitest-hooks"
 gem "rake"
-gem "rspec"
 
 unless ENV.key?("NO_XORCIST")
   platform :mri, :truffleruby do
@@ -27,6 +28,5 @@ if RUBY_VERSION >= "3.2.0"
   group :coverage do
     gem "repo-small-badge", require: false
     gem "simplecov", ">= 1.0.0", require: false
-    gem "simplecov-rspec", require: false
   end
 end

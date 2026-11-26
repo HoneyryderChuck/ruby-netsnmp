@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+SimpleCov.cover "lib/**/*.rb"
 SimpleCov.skip ".bundle/"
 SimpleCov.skip "vendor/"
 SimpleCov.skip "spec/"

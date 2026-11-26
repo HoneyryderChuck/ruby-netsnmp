@@ -240,18 +240,15 @@ manager2 = NETSNMP::Client.new(debug: $stderr, debug_level: 2, ....)
 
 ## Tests
 
-This library uses RSpec. The client specs are "integration" tests, in that we communicate with an [snmpsim-built snmp agent simulator](https://github.com/etingof/snmpsim).
+This library uses Minitest (with the Spec DSL). The client specs are "integration" tests, in that we communicate with an [snmpsim-built snmp agent simulator](https://github.com/etingof/snmpsim).
 
 
-### RSpec
+### Minitest
 
 You can run all tests by typing:
 
 ```
 > bundle exec rake spec
-# or
-> bundle exec rspec
-...
 ```
 
 
