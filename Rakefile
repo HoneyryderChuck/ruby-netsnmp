@@ -3,10 +3,14 @@
 require "bundler/gem_tasks"
 
 begin
-  require "rspec/core/rake_task"
+  require "rake/testtask"
 
   desc "runs the tests"
-  RSpec::Core::RakeTask.new
+  Rake::TestTask.new(:spec) do |t|
+    t.libs = %w[spec]
+    t.pattern = "spec/**/*_spec.rb"
+    t.warning = false
+  end
 rescue LoadError
 end
 

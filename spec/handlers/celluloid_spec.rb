@@ -9,7 +9,9 @@ else
   require_relative "../support/request_examples"
   require_relative "../support/celluloid"
 
-  RSpec.describe "with cellulloid", type: :celluloid do
+  class NETSNMPCelluloidSpec < Minitest::Spec
+    include Minitest::Hooks
+    include NETSNMP
     include CelluloidHelpers
 
     let(:user_options) do
@@ -38,17 +40,17 @@ else
     end
 
     before(:all) { Celluloid.boot }
-    around(:each) do |example|
-      within_io_actor { example.run }
+    around do |&block|
+      within_io_actor(&block)
     end
     let(:proxy) { CelluloidHelpers::Proxy.new(SNMPHOST, SNMPPORT) }
-    after(:each) { proxy.close }
+    after { proxy.close }
 
-    it_behaves_like "an snmp client" do
-      subject { NETSNMP::Client.new(**options) }
-      let(:device_options) { { proxy: proxy } }
-      let(:protocol_options) { user_options }
-      let(:extra_options) { { version: 3, context: "a172334d7d97871b72241397f713fa12" } }
-    end
+    include RequestExamples
+
+    subject { NETSNMP::Client.new(**options) }
+    let(:device_options) { { proxy: proxy } }
+    let(:protocol_options) { user_options }
+    let(:extra_options) { { version: 3, context: "a172334d7d97871b72241397f713fa12" } }
   end
 end

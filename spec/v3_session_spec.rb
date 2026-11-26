@@ -2,26 +2,28 @@
 
 require_relative "spec_helper"
 
-RSpec.describe NETSNMP::V3Session do
+class NETSNMPV3SessionSpec < Minitest::Spec
+  include NETSNMP
+
   let(:security_options) do
     { username: "authprivmd5des", auth_password: "maplesyrup",
       auth_protocol: :md5, priv_password: "maplesyrup",
       priv_protocol: :des, security_level: :auth_priv }
   end
   it "generates the security parameters handler" do
-    sess = described_class.new(**security_options, host: SNMPHOST, port: SNMPPORT)
+    sess = V3Session.new(**security_options, host: SNMPHOST, port: SNMPPORT)
     # not generated yet
-    expect(sess.instance_variable_get(:@security_parameters)).to be_a(NETSNMP::SecurityParameters)
+    assert_instance_of(NETSNMP::SecurityParameters, sess.instance_variable_get(:@security_parameters))
   end
 
   it "allows to pass a custom one" do
-    sec_params = NETSNMP::SecurityParameters.new(**security_options)
-    sess = described_class.new(host: SNMPHOST, port: SNMPPORT, security_parameters: sec_params)
+    sec_params = SecurityParameters.new(**security_options)
+    sess = V3Session.new(host: SNMPHOST, port: SNMPPORT, security_parameters: sec_params)
     # not generated yet
-    expect(sess.instance_variable_get(:@security_parameters)).to be(sec_params)
+    assert_equal(sec_params, sess.instance_variable_get(:@security_parameters))
   end
 
   it "fails if the pass object doesn't follow the expected api" do
-    expect { described_class.new(host: SNMPHOST, port: SNMPPORT, security_parameters: double) }.to raise_error(NETSNMP::Error)
+    assert_raises(NETSNMP::Error) { V3Session.new(host: SNMPHOST, port: SNMPPORT, security_parameters: Object.new) }
   end
 end

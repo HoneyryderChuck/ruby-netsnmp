@@ -44,9 +44,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run lint
-        run:  bundle exec rake rubocop
-        if: matrix.ruby == '4.0'
       - name: Run tests
         uses: adambirds/docker-compose-action@v1.5.0
         with:
@@ -58,8 +55,6 @@ jobs:
           test-command: /home/spec/support/specs.sh
         continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == 'jruby' || matrix.ruby == 'truffleruby' }}
       - name: Run tests without xorcist
-        env:
-          COVERAGE_DIR: coverage/${{ matrix.ruby }}-xorcist
         uses: adambirds/docker-compose-action@v1.5.0
         with:
           compose-file: |
@@ -68,6 +63,11 @@ jobs:
             ./docker-compose-${{matrix.ruby}}.yml
           test-container: netsnmp_no_xorcist
           test-command: /home/spec/support/specs.sh
+        if: matrix.ruby == '4.0'
+      - name: Run lint
+        run: |
+          bundle exec rake rubocop
+          find coverage -name '.resultset.json'
         if: matrix.ruby == '4.0'
       - name: Upload coverage
         uses: actions/upload-artifact@v4

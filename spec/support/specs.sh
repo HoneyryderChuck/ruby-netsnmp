@@ -50,7 +50,7 @@ EOT
 export OPENSSL_CONF=/home/openssl_legacy.cnf
 
 
-if [[ ${RUBY_VERSION:0:1} = "4" ]]; then
+if [[ "$RUBY_ENGINE" = "java" && ${RUBY_VERSION:0:1} = "4" ]]; then
   export RUBYOPT='-rbundler/setup -rrbs/test/setup'
   export RBS_TEST_RAISE=true
   export RBS_TEST_LOGLEVEL=error

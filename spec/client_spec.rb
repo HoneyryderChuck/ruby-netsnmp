@@ -3,7 +3,7 @@
 require_relative "spec_helper"
 require_relative "support/request_examples"
 
-RSpec.describe NETSNMP::Client do
+class NETSNMPClientSpec < Minitest::Spec
   let(:host) { SNMPHOST }
 
   let(:device_options) do
@@ -13,78 +13,78 @@ RSpec.describe NETSNMP::Client do
     }
   end
   describe "v1" do
-    it_behaves_like "an snmp client" do
-      let(:protocol_options) do
-        {
-          version: "1",
-          community: "public"
-        }
-      end
-      let(:get_oid) { "1.3.6.1.2.1.1.5.0" }
-      let(:next_oid) { "1.3.6.1.2.1.1.6.0" }
-      let(:walk_oid) { "1.3.6.1.2.1.1" }
-      let(:set_oid) { "sysUpTime.0" } # sysUpTimeInstance
-      let(:get_result) { "zeus.snmplabs.com (you can change this!)" }
-      let(:next_result) { "San Francisco, California, United States" }
-      let(:walk_result) do
-        {
-          "1.3.6.1.2.1.1.1.0" => "Linux zeus 4.8.6.5-smp #2 SMP Sun Nov 13 14:58:11 CDT 2016 i686",
-          "1.3.6.1.2.1.1.2.0" => "1.3.6.1.4.1.8072.3.2.10",
-          "1.3.6.1.2.1.1.3.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/,
-          "1.3.6.1.2.1.1.4.0" => "SNMP Laboratories, info@snmplabs.com",
-          "1.3.6.1.2.1.1.5.0" => "zeus.snmplabs.com (you can change this!)",
-          "1.3.6.1.2.1.1.6.0" => "San Francisco, California, United States",
-          "1.3.6.1.2.1.1.7.0" => "72",
-          "1.3.6.1.2.1.1.8.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/
-        }
-      end
-      let(:set_oid_result) { 43 }
+    include RequestExamples
+
+    let(:protocol_options) do
+      {
+        version: "1",
+        community: "public"
+      }
     end
+    let(:get_oid) { "1.3.6.1.2.1.1.5.0" }
+    let(:next_oid) { "1.3.6.1.2.1.1.6.0" }
+    let(:walk_oid) { "1.3.6.1.2.1.1" }
+    let(:set_oid) { "sysUpTime.0" } # sysUpTimeInstance
+    let(:get_result) { "zeus.snmplabs.com (you can change this!)" }
+    let(:next_result) { "San Francisco, California, United States" }
+    let(:walk_result) do
+      {
+        "1.3.6.1.2.1.1.1.0" => "Linux zeus 4.8.6.5-smp #2 SMP Sun Nov 13 14:58:11 CDT 2016 i686",
+        "1.3.6.1.2.1.1.2.0" => "1.3.6.1.4.1.8072.3.2.10",
+        "1.3.6.1.2.1.1.3.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/,
+        "1.3.6.1.2.1.1.4.0" => "SNMP Laboratories, info@snmplabs.com",
+        "1.3.6.1.2.1.1.5.0" => "zeus.snmplabs.com (you can change this!)",
+        "1.3.6.1.2.1.1.6.0" => "San Francisco, California, United States",
+        "1.3.6.1.2.1.1.7.0" => "72",
+        "1.3.6.1.2.1.1.8.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/
+      }
+    end
+    let(:set_oid_result) { 43 }
   end
   describe "v2" do
-    it_behaves_like "an snmp client" do
+    include RequestExamples
+
+    let(:protocol_options) do
+      {
+        version: "2c",
+        community: "public"
+      }
+    end
+    let(:get_oid) { "sysName.0" }
+    let(:next_oid) { "1.3.6.1.2.1.1.6.0" }
+    let(:walk_oid) { "system" }
+    let(:set_oid) { "sysUpTime.0" }
+    let(:get_result) { "zeus.snmplabs.com (you can change this!)" }
+    let(:next_result) { "San Francisco, California, United States" }
+    let(:walk_result) do
+      {
+        "1.3.6.1.2.1.1.1.0" => "Linux zeus 4.8.6.5-smp #2 SMP Sun Nov 13 14:58:11 CDT 2016 i686",
+        "1.3.6.1.2.1.1.2.0" => "1.3.6.1.4.1.8072.3.2.10",
+        "1.3.6.1.2.1.1.3.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/,
+        "1.3.6.1.2.1.1.4.0" => "SNMP Laboratories, info@snmplabs.com",
+        "1.3.6.1.2.1.1.5.0" => "zeus.snmplabs.com (you can change this!)",
+        "1.3.6.1.2.1.1.6.0" => "San Francisco, California, United States",
+        "1.3.6.1.2.1.1.7.0" => "72",
+        "1.3.6.1.2.1.1.8.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/
+      }
+    end
+    let(:set_oid_result) { 43 }
+
+    describe "when the returned result is a hex-string" do
       let(:protocol_options) do
         {
           version: "2c",
-          community: "public"
+          community: "foreignformats/winxp1"
         }
       end
-      let(:get_oid) { "sysName.0" }
-      let(:next_oid) { "1.3.6.1.2.1.1.6.0" }
-      let(:walk_oid) { "system" }
-      let(:set_oid) { "sysUpTime.0" }
-      let(:get_result) { "zeus.snmplabs.com (you can change this!)" }
-      let(:next_result) { "San Francisco, California, United States" }
-      let(:walk_result) do
-        {
-          "1.3.6.1.2.1.1.1.0" => "Linux zeus 4.8.6.5-smp #2 SMP Sun Nov 13 14:58:11 CDT 2016 i686",
-          "1.3.6.1.2.1.1.2.0" => "1.3.6.1.4.1.8072.3.2.10",
-          "1.3.6.1.2.1.1.3.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/,
-          "1.3.6.1.2.1.1.4.0" => "SNMP Laboratories, info@snmplabs.com",
-          "1.3.6.1.2.1.1.5.0" => "zeus.snmplabs.com (you can change this!)",
-          "1.3.6.1.2.1.1.6.0" => "San Francisco, California, United States",
-          "1.3.6.1.2.1.1.7.0" => "72",
-          "1.3.6.1.2.1.1.8.0" => /Timeticks: \(\d+\) \d+ days, \d+:\d+:\d+\.\d+/
-        }
-      end
-      let(:set_oid_result) { 43 }
+      let(:hex_get_oid) { "1.3.6.1.2.1.25.3.7.1.3.10.1" }
+      let(:hex_get_result) { "\x01\x00\x00\x00" }
+      let(:hex_get_output) { "01 00 00 00" }
+      let(:result) { subject.get(oid: hex_get_oid) }
 
-      context "when the returned value is a hex-string" do
-        let(:protocol_options) do
-          {
-            version: "2c",
-            community: "foreignformats/winxp1"
-          }
-        end
-        let(:hex_get_oid) { "1.3.6.1.2.1.25.3.7.1.3.10.1" }
-        let(:hex_get_result) { "\x01\x00\x00\x00" }
-        let(:hex_get_output) { "01 00 00 00" }
-        let(:value) { subject.get(oid: hex_get_oid) }
-
-        it "returns the string, which outputs the hex-representation" do
-          expect(value).to eq(hex_get_result)
-          expect(value.inspect).to include(hex_get_output)
-        end
+      it "returns the string, which outputs the hex-representation" do
+        assert_equal(hex_get_result, result)
+        assert_includes(result.inspect, hex_get_output)
       end
     end
   end
@@ -116,167 +116,169 @@ RSpec.describe NETSNMP::Client do
       }
     end
     let(:set_oid_result) { 43 }
-    context "with a no auth no priv policy" do
+    describe "with a no auth no priv policy" do
       let(:user_options) { { username: "unsafe", security_level: :noauth } }
-      it_behaves_like "an snmp client" do
-        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        # why is this here? that variation/notification community causes the simulagtor to go down
-        # until I find the origin of the issue and patched it with an appropriated community, this
-        # is here so that I test the set call at least once, although I'm sure it'll work always
-        # for v3
-        describe "#set" do
-          let(:extra_options) { { context: "0886e1397d572377c17c15036a1e6c66" } }
-          it "updates the value of the oid" do
-            prev_value = subject.get(oid: set_oid)
-            expect(prev_value).to be_a(Integer)
 
-            # without type
-            subject.set(oid: set_oid, value: set_oid_result)
-            expect(subject.get(oid: set_oid)).to eq(set_oid_result)
+      include RequestExamples
 
-            subject.set(oid: set_oid, value: prev_value)
-          end
+      let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
+      # why is this here? that variation/notification community causes the simulagtor to go down
+      # until I find the origin of the issue and patched it with an appropriated community, this
+      # is here so that I test the set call at least once, although I'm sure it'll work always
+      # for v3
+      describe "#set" do
+        let(:extra_options) { { context: "0886e1397d572377c17c15036a1e6c66" } }
+        it "updates the value of the oid" do
+          prev_value = subject.get(oid: set_oid)
+          assert_instance_of(Integer, prev_value)
+
+          # without type
+          subject.set(oid: set_oid, value: set_oid_result)
+          assert_equal(set_oid_result, subject.get(oid: set_oid))
+
+          subject.set(oid: set_oid, value: prev_value)
         end
       end
     end
-    context "with an only auth policy" do
-      context "speaking md5" do
+    describe "with an only auth policy" do
+      describe "speaking md5" do
         let(:user_options) do
           { username: "authmd5", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :md5 }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "speaking sha" do
+      describe "speaking sha" do
         let(:user_options) do
           { username: "authsha", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :sha }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "speaking sha224" do
+      describe "speaking sha224" do
         let(:user_options) do
           { username: "authsha224", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :sha224 }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "speaking sha384" do
+      describe "speaking sha384" do
         let(:user_options) do
           { username: "authsha384", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :sha384 }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "speaking sha256" do
+      describe "speaking sha256" do
         let(:user_options) do
           { username: "authsha256", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :sha256 }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "speaking sha512" do
+      describe "speaking sha512" do
         let(:user_options) do
           { username: "authsha512", security_level: :auth_no_priv,
             auth_password: "maplesyrup", auth_protocol: :sha512 }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
     end
-    context "with an auth priv policy" do
-      context "auth in md5, encrypting in des" do
+    describe "with an auth priv policy" do
+      describe "auth in md5, encrypting in des" do
         let(:user_options) do
           { username: "authprivmd5des", auth_password: "maplesyrup",
             auth_protocol: :md5, priv_password: "maplesyrup",
             priv_protocol: :des }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "auth in sha, encrypting in des" do
+      describe "auth in sha, encrypting in des" do
         let(:user_options) do
           { username: "authprivshades", auth_password: "maplesyrup",
             auth_protocol: :sha, priv_password: "maplesyrup",
             priv_protocol: :des }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
+        include RequestExamples
 
-          context "with wrong auth password and wrong encrypting password" do
-            let(:user_options) do
-              { username: "authprivmd5des", auth_password: "wrongpassword",
-                auth_protocol: :md5, priv_password: "maplesyrup",
-                priv_protocol: :des }
-            end
-            let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-            it "raises authentication error" do
-              expect { subject.get(oid: get_oid) }.to raise_error(NETSNMP::Error, "Authentication failure (incorrect password, community or key)")
-            end
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
+
+        describe "with wrong auth password and wrong encrypting password" do
+          let(:user_options) do
+            { username: "authprivmd5des", auth_password: "wrongpassword",
+              auth_protocol: :md5, priv_password: "maplesyrup",
+              priv_protocol: :des }
+          end
+          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
+          it "raises authentication error" do
+            e = assert_raises(NETSNMP::Error) { subject.get(oid: get_oid) }
+            assert_includes(e.message, "Authentication failure (incorrect password, community or key)")
           end
         end
       end
 
-      context "auth in md5, encrypting in aes" do
+      describe "auth in md5, encrypting in aes" do
         let(:user_options) do
           { username: "authprivmd5aes", auth_password: "maplesyrup",
             auth_protocol: :md5, priv_password: "maplesyrup",
             priv_protocol: :aes }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
       end
-      context "auth in sha, encrypting in aes" do
+      describe "auth in sha, encrypting in aes" do
         let(:user_options) do
           { username: "authprivshaaes", auth_password: "maplesyrup",
             auth_protocol: :sha, priv_password: "maplesyrup",
             priv_protocol: :aes }
         end
-        it_behaves_like "an snmp client" do
-          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-        end
-        context "auth in sha224, encrypting in aes" do
+        include RequestExamples
+
+        let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
+        describe "auth in sha224, encrypting in aes" do
           let(:user_options) do
             { username: "authprivsha224aes", auth_password: "maplesyrup",
               auth_protocol: :sha224, priv_password: "maplesyrup",
               priv_protocol: :aes }
           end
-          it_behaves_like "an snmp client" do
-            let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-          end
+          include RequestExamples
+
+          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
         end
-        context "auth in sha384, encrypting in aes192" do
+        describe "auth in sha384, encrypting in aes192" do
           let(:user_options) do
             { username: "authprivsha384aes192", auth_password: "maplesyrup",
               auth_protocol: :sha384, priv_password: "maplesyrup",
               priv_protocol: :aes192 }
           end
-          it_behaves_like "an snmp client" do
-            let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-          end
+          include RequestExamples
+
+          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
         end
-        context "auth in sha512, encrypting in aes256" do
+        describe "auth in sha512, encrypting in aes256" do
           let(:user_options) do
             { username: "authprivsha512aes256", auth_password: "maplesyrup",
               auth_protocol: :sha512, priv_password: "maplesyrup",
               priv_protocol: :aes256 }
           end
-          it_behaves_like "an snmp client" do
-            let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
-          end
+          include RequestExamples
+
+          let(:protocol_options) { version_options.merge(user_options).merge(extra_options) }
         end
       end
     end
