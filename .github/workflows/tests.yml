@@ -104,9 +104,11 @@ jobs:
           COVERAGE_DIR: coverage/merged
         run: |
           # rewrite mac paths
-          find coverage -name "*resultset.json" -exec sed -i 's|/Users/runner/work/idnx/idnx|${{ github.workspace }}|g' {} \;
+          find coverage -name "*resultset.json" -exec sed -i 's|/Users/runner/work/ruby-netsnmp/ruby-netsnmp|${{ github.workspace }}|g' {} \;
           # rewrite window paths
-          find coverage -name "*resultset.json" -exec sed -i 's|D:/a/idnx/idnx|${{ github.workspace }}|g' {} \;
+          find coverage -name "*resultset.json" -exec sed -i 's|D:/a/ruby-netsnmp/ruby-netsnmp|${{ github.workspace }}|g' {} \;
+          # Rewrite Docker/Linux paths
+          find coverage -name "*resultset.json" -exec sed -i 's|/home|${{ github.workspace }}|g' {} \;
           bundle exec rake coverage:report
 
       - name: Upload simplecov results
