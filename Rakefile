@@ -3,13 +3,13 @@
 require "bundler/gem_tasks"
 
 begin
-  require "rake/testtask"
+  require "minitest/test_task"
 
   desc "runs the tests"
-  Rake::TestTask.new(:spec) do |t|
-    t.libs = %w[spec]
-    t.pattern = "spec/**/*_spec.rb"
+  Minitest::TestTask.create(:spec) do |t|
+    t.libs << "spec"
     t.warning = false
+    t.test_globs = ["spec/**/*_spec.rb"]
   end
 rescue LoadError
 end

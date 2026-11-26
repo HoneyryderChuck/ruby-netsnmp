@@ -53,7 +53,7 @@ jobs:
             ./docker-compose-${{matrix.ruby}}.yml
           test-container: netsnmp
           test-command: /home/spec/support/specs.sh
-        continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == 'jruby' || matrix.ruby == 'truffleruby' }}
+        continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == 'truffleruby' }}
       - name: Run tests without xorcist
         uses: adambirds/docker-compose-action@v1.5.0
         with:
