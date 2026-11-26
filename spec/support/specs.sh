@@ -58,4 +58,4 @@ if [[ ${RUBY_VERSION:0:1} = "4" ]]; then
   export RBS_TEST_TARGET='NETSNMP*'
 fi
 
-bundle exec rake spec:ci
+bundle exec rake spec
