@@ -7,8 +7,6 @@ services:
       - SNMP_HOST=snmp-server-emulator
       - SNMP_PORT=1161
       - CI=1
-      - BUNDLE_SILENCE_ROOT_WARNING=1
-      - BUNDLE_JOBS=10
       - GEM_HOME=/usr/local/bundle
     image: ruby
     depends_on:
