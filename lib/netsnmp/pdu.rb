@@ -10,56 +10,54 @@ module NETSNMP
     MAXREQUESTID = 0x7fffffff
 
     using ASNExtensions
-    class << self
-      #: [T] (String | OpenSSL::ASN1::ASN1Data der, **untyped vars) -> instance
-      def decode(der, **args)
-        der = OpenSSL::ASN1.decode(der) if der.is_a?(String)
+    #: [T] (String | OpenSSL::ASN1::ASN1Data der, **untyped vars) -> instance
+    def self.decode(der, **args)
+      der = OpenSSL::ASN1.decode(der) if der.is_a?(String)
 
-        *headers, request = der.value
+      *headers, request = der.value
 
-        version, community = headers.map(&:value)
+      version, community = headers.map(&:value)
 
-        type = request.tag
+      type = request.tag
 
-        *request_headers, varbinds = request.value
+      *request_headers, varbinds = request.value
 
-        request_id, error_status, error_index = request_headers.map { |x| x.value.to_i }
+      request_id, error_status, error_index = request_headers.map { |x| x.value.to_i }
 
-        varbs = varbinds.value.map do |varbind|
-          oid_asn, val_asn = varbind.value
-          oid = oid_asn.value
-          { oid: oid, value: val_asn }
-        end
-
-        new(type: type,
-            version: version.to_i,
-            community: community,
-            error_status: error_status.to_i,
-            error_index: error_index.to_i,
-            request_id: request_id.to_i,
-            varbinds: varbs,
-            **args)
+      varbs = varbinds.value.map do |varbind|
+        oid_asn, val_asn = varbind.value
+        oid = oid_asn.value
+        { oid: oid, value: val_asn }
       end
 
-      # factory method that abstracts initialization of the pdu types that the library supports.
-      #
-      # @param [Symbol] type the type of pdu structure to build
-      #
-      #: (pdu_type, **untyped) -> instance
-      def build(type, **args)
-        typ = case type
-              when :get       then 0
-              when :getnext   then 1
-              #          when :getbulk   then 5
-              when :set       then 3
-              when :inform    then 6
-              when :trap      then 7
-              when :response  then 2
-              when :report    then 8
-              else raise Error, "#{type} is not supported as type"
-              end
-        new(type: typ, **args)
-      end
+      new(type: type,
+          version: version.to_i,
+          community: community,
+          error_status: error_status.to_i,
+          error_index: error_index.to_i,
+          request_id: request_id.to_i,
+          varbinds: varbs,
+          **args)
+    end
+
+    # factory method that abstracts initialization of the pdu types that the library supports.
+    #
+    # @param [Symbol] type the type of pdu structure to build
+    #
+    #: (pdu_type, **untyped) -> instance
+    def self.build(type, **args)
+      typ = case type
+            when :get       then 0
+            when :getnext   then 1
+            #          when :getbulk   then 5
+            when :set       then 3
+            when :inform    then 6
+            when :trap      then 7
+            when :response  then 2
+            when :report    then 8
+            else raise Error, "#{type} is not supported as type"
+            end
+      new(type: typ, **args)
     end
 
     attr_reader :varbinds #: Array[Varbind]
