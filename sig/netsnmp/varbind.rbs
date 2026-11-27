@@ -5,6 +5,8 @@ module NETSNMP
   class Varbind
     type varbind_value = OpenSSL::ASN1::OctetString | OpenSSL::ASN1::Primitive | OpenSSL::ASN1::ASN1Data | oid_value
 
+    @type: oid_type?
+
     attr_reader oid: String
 
     attr_reader value: oid_value

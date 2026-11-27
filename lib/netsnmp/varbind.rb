@@ -6,6 +6,8 @@ module NETSNMP
   class Varbind
     # @rbs!
     #   type varbind_value = OpenSSL::ASN1::OctetString | OpenSSL::ASN1::Primitive | OpenSSL::ASN1::ASN1Data | oid_value
+    #
+    #   @type: oid_type?
 
     attr_reader :oid #: String
 
@@ -36,21 +38,21 @@ module NETSNMP
       asn_val = if type
                   convert_to_asn(type, @value)
                 else
-                  case @value
+                  case value
                   when String
-                    OpenSSL::ASN1::OctetString.new(@value)
+                    OpenSSL::ASN1::OctetString.new(value)
                   when Integer
-                    OpenSSL::ASN1::Integer.new(@value)
+                    OpenSSL::ASN1::Integer.new(value)
                   when true, false
-                    OpenSSL::ASN1::Boolean.new(@value)
+                    OpenSSL::ASN1::Boolean.new(value)
                   when nil
                     OpenSSL::ASN1::Null.new(nil)
                   when IPAddr
                     # @type ivar @value: IPAddr
-                    OpenSSL::ASN1::ASN1Data.new(@value.hton, 0, :APPLICATION)
+                    OpenSSL::ASN1::ASN1Data.new(value.hton, 0, :APPLICATION)
                   when Timetick
                     # @type ivar @value: Timetick
-                    @value.to_asn
+                    value.to_asn
                   else
                     raise Error, "#{@value}: unsupported varbind type"
                   end

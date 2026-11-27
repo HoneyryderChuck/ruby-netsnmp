@@ -124,7 +124,8 @@ module NETSNMP
         auth_salt = OpenSSL::ASN1::OctetString.new(signature).with_label(:auth)
         log(level: 2) { auth_salt.to_hex }
         none_der = authnone(security_parameters.auth_protocol).to_der
-        encoded[encoded.index(none_der), none_der.size] = auth_salt.to_der
+        start_idx = encoded.index(none_der) #: Integer
+        encoded[start_idx, none_der.size] = auth_salt.to_der
         log { Hexdump.dump(encoded) }
       end
       encoded

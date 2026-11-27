@@ -298,9 +298,9 @@ module NETSNMP
 
     #: -> (Encryption::AES | Encryption::DES)?
     def encryption
-      @encryption ||= case @priv_protocol
+      @encryption ||= case priv_protocol = @priv_protocol
                       when :des then Encryption::DES.new(priv_key)
-                      when :aes, :aes192, :aes256 then Encryption::AES.new(priv_key, cipher: @priv_protocol)
+                      when :aes, :aes192, :aes256 then Encryption::AES.new(priv_key, cipher: priv_protocol)
                       end
     end
 

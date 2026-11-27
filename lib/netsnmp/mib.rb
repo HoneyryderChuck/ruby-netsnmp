@@ -5,7 +5,7 @@ require_relative "mib/parser"
 module NETSNMP
   module MIB
     # @rbs!
-    #   type import = {ids: Array[{name: string}], name: string} | {ids: {name: string}, name: string}
+    #   type import = {ids: Array[{name: string}] | {name: string}, name: string}
 
     OIDREGEX = /^[\d.]*$/.freeze #: Regexp
 
@@ -79,7 +79,7 @@ module NETSNMP
     #: (String mod) -> bool
     def load(mod) # rubocop:disable Naming/PredicateMethod
       unless File.file?(mod)
-        moddir = nil
+        moddir = nil #: String?
         MIBDIRS.each do |mibdir|
           if File.exist?(File.join(mibdir, mod))
             moddir = File.join(mibdir, mod)
@@ -168,11 +168,11 @@ module NETSNMP
     # Reformats the import lists into an hash indexed by module name, to a list of
     # imported names
     #
-    #: (Array[import] | import | nil data) -> Hash[String, Array[String]]?
+    #: (Array[import] | import | nil) -> Hash[String, Array[String]]?
     def load_imports(imports)
       return unless imports
 
-      imports = [imports] unless imports.respond_to?(:to_ary)
+      imports = Array(imports) #: Array[import]
       imports.to_h do |import|
         [String(import[:name]), case import[:ids]
                                 when Hash

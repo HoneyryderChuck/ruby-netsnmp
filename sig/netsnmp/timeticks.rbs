@@ -18,8 +18,8 @@ module NETSNMP
     # : -> OpenSSL::ASN1::ASN1Data
     def to_asn: () -> OpenSSL::ASN1::ASN1Data
 
-    # : (Integer ticks) -> [instance, instance]
-    def coerce: (Integer ticks) -> [ instance, instance ]
+    # : (Integer ticks) -> [instance, self]
+    def coerce: (Integer ticks) -> [ instance, self ]
 
     # : (_ToI other) -> Integer?
     def <=>: (_ToI other) -> Integer?

@@ -2,7 +2,7 @@
 
 module NETSNMP
   module MIB
-    type import = { ids: Array[{ name: string }], name: string } | { ids: { name: string }, name: string }
+    type import = { ids: Array[{ name: string }] | { name: string }, name: string }
 
     OIDREGEX: Regexp
 
@@ -55,8 +55,8 @@ module NETSNMP
     #  Reformats the import lists into an hash indexed by module name, to a list of
     #  imported names
     #
-    # : (Array[import] | import | nil data) -> Hash[String, Array[String]]?
-    def self?.load_imports: (Array[import] | import | nil data) -> Hash[String, Array[String]]?
+    # : (Array[import] | import | nil) -> Hash[String, Array[String]]?
+    def self?.load_imports: (Array[import] | import | nil) -> Hash[String, Array[String]]?
 
     # : (String) -> bool
     def self?.integer?: (String) -> bool

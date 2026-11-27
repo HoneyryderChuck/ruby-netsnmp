@@ -31,7 +31,7 @@ module NETSNMP
       OpenSSL::ASN1::ASN1Data.new([@ticks].pack("N"), 3, :APPLICATION)
     end
 
-    #: (Integer ticks) -> [instance, instance]
+    #: (Integer ticks) -> [instance, self]
     def coerce(other)
       [Timetick.new(other), self]
     end

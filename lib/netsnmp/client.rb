@@ -27,7 +27,7 @@ module NETSNMP
     #      puts client.get(oid: "1.3.6.1.2.1.1.5.0")
     #    end
     #
-    #: (?version: snmp_version, **untyped) ?{ (instance) -> void } -> void
+    #: (?version: snmp_version, **untyped) ?{ (self) -> void } -> void
     def initialize(version: nil, **options)
       version = case version
                 when Integer then version # assume the use know what he's doing

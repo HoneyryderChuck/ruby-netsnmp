@@ -19,10 +19,8 @@ module NETSNMP
 
     #: (?level: Integer) { () -> String } -> void
     def log(level: @debug_level)
-      return unless @debug
+      return unless (debug_stream = @debug)
       return unless @debug_level >= level
-
-      debug_stream = @debug
 
       debug_stream << (+"\n" << yield << "\n")
     end
