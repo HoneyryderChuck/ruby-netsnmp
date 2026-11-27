@@ -4,8 +4,6 @@ require_relative "mib/parser"
 
 module NETSNMP
   module MIB
-    using IsNumericExtensions
-
     # @rbs!
     #   type import = {ids: Array[{name: string}], name: string} | {ids: {name: string}, name: string}
 
@@ -40,7 +38,7 @@ module NETSNMP
       return unless prefix
 
       # early exit if it's an OID already
-      unless prefix.integer?
+      unless integer?(prefix)
         load_defaults
         # load module if need be
         idx = prefix.index("::")
@@ -139,7 +137,7 @@ module NETSNMP
     #: (String name, Array[String] value, imports: Hash[String, Array[String]]?, declarations: Hash[String, Array[String]]) -> void
     def store_oid_in_identifiers(nme, value, imports:, declarations:)
       oid = value.flat_map do |cp|
-        if cp.integer?
+        if integer?(cp)
           cp
         elsif @object_identifiers.key?(cp)
           @object_identifiers[cp]
@@ -183,6 +181,14 @@ module NETSNMP
                                   import[:ids].map { |id| String(id[:name]) }
                                 end]
       end
+    end
+
+    #: (String) -> bool
+    def integer?(val)
+      val.each_byte do |byte|
+        return false unless byte.between?(48, 57)
+      end
+      true
     end
 
     #: -> void

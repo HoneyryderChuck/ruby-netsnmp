@@ -1,11 +1,6 @@
 # Generated from lib/netsnmp/extensions.rb with RBS::Inline
 
 module NETSNMP
-  module IsNumericExtensions
-    # : -> bool
-    def integer?: () -> bool
-  end
-
   module ASNExtensions
     ASN_COLORS: Hash[singleton(OpenSSL::ASN1::ASN1Data), Integer]
 

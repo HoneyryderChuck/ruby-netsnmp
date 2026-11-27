@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 module NETSNMP
-  module IsNumericExtensions
-    refine String do
-      #: -> bool
-      def integer?
-        each_byte do |byte|
-          return false unless byte.between?(48, 57)
-        end
-        true
-      end
-    end
-  end
-
   module ASNExtensions
     ASN_COLORS = {
       OpenSSL::ASN1::Sequence => 34, # blue
