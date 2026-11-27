@@ -5,17 +5,7 @@ module NETSNMP
     ASN_COLORS: Hash[singleton(OpenSSL::ASN1::ASN1Data), Integer]
 
     # : -> String
+    #  @rbs skip
     def to_hex: () -> String
-  end
-
-  module Hexdump
-    # : (String, ?width: Integer, ?in_groups_if: Integer, ?separator: String)
-    def self?.dump: (untyped data, ?width: untyped, ?in_groups_of: untyped, ?separator: untyped) -> untyped
-  end
-
-  # Like a string, but it prints an hex-string version of itself
-  class HexString < String
-    # : -> String
-    def self?.inspect: () -> String
   end
 end

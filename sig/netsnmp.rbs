@@ -38,4 +38,15 @@ module NETSNMP
     # Bitwise XOR operator for the String class
     def xor: (untyped other) -> untyped
   end
+
+  module Hexdump
+    # : (String, ?width: Integer, ?in_groups_if: Integer, ?separator: String)
+    def self?.dump: (untyped data, ?width: untyped, ?in_groups_of: untyped, ?separator: untyped) -> untyped
+  end
+
+  # Like a string, but it prints an hex-string version of itself
+  class HexString < String
+    # : -> String
+    def self?.inspect: () -> String
+  end
 end

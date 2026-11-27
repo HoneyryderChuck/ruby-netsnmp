@@ -64,6 +64,27 @@ module NETSNMP
       end
     end
   end
+
+  module Hexdump
+    module_function
+
+    #: (String, ?width: Integer, ?in_groups_if: Integer, ?separator: String)
+    def dump(data, width: 8, in_groups_of: 4, separator: "\n")
+      pairs = data.unpack1("H*").scan(/.{#{in_groups_of}}/)
+      pairs.each_slice(width).map do |row|
+        row.join(" ")
+      end.join(separator)
+    end
+  end
+
+  # Like a string, but it prints an hex-string version of itself
+  class HexString < String
+    #: -> String
+    def inspect
+      Hexdump.dump(to_s, in_groups_of: 2, separator: " ")
+    end
+  end
+  private_constant :Hexdump, :HexString
 end
 
 require "netsnmp/errors"

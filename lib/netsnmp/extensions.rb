@@ -14,6 +14,7 @@ module NETSNMP
     ASN_COLORS.each_key do |klass|
       refine(klass) do
         #: -> String
+        # @rbs skip
         def to_hex
           "#{colorize_hex} (#{value.to_s.inspect})"
         end
@@ -70,26 +71,6 @@ module NETSNMP
         lbl = @label || self.class.name.split("::").last
         "#{lbl}: \e[#{ASN_COLORS[self.class]}m#{hex}\e[0m"
       end
-    end
-  end
-
-  module Hexdump
-    module_function
-
-    #: (String, ?width: Integer, ?in_groups_if: Integer, ?separator: String)
-    def dump(data, width: 8, in_groups_of: 4, separator: "\n")
-      pairs = data.unpack1("H*").scan(/.{#{in_groups_of}}/)
-      pairs.each_slice(width).map do |row|
-        row.join(" ")
-      end.join(separator)
-    end
-  end
-
-  # Like a string, but it prints an hex-string version of itself
-  class HexString < String
-    #: -> String
-    def inspect
-      Hexdump.dump(to_s, in_groups_of: 2, separator: " ")
     end
   end
 end
