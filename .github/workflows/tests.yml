@@ -64,17 +64,42 @@ jobs:
           test-container: netsnmp_no_xorcist
           test-command: /home/spec/support/specs.sh
         if: matrix.ruby == '4.0'
-      - name: Run lint
-        run: |
-          bundle exec rake rubocop
-          find coverage -name '.resultset.json'
-        if: matrix.ruby == '4.0'
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{matrix.ruby}}
           path: coverage/
           include-hidden-files: true
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Rubocop
+    env:
+      BUNDLE_WITHOUT: types
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v2
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - name: Run lint
+        run: bundle exec rake rubocop
+
+  types:
+    runs-on: ubuntu-latest
+    name: Signatures
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v2
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - name: Check sig/ is synched
+        run: bundle exec rake sig:verify
 
   coverage:
     permissions:

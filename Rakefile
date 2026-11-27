@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "tmpdir"
 require "bundler/gem_tasks"
 
 begin
@@ -81,6 +82,17 @@ namespace :sig do
   task :export do
     rm_rf "sig"
     sh "bundle", "exec", "rbs-inline", "--opt-out", "--output=sig", "lib"
+  end
+
+  desc "Verify that sigs match the exported in sig/"
+  task :verify do
+    Dir.mktmpdir do |exported|
+      sh "bundle", "exec", "rbs-inline", "--opt-out", "--output=#{exported}", "lib", verbose: false
+
+      next if system("diff", "-ru", "sig", exported)
+
+      abort("sig/ is not what the annotations in lib/ export: run `bundle exec rake sig:export` and commit it.")
+    end
   end
 end
 
