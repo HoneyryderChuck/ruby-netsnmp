@@ -3,6 +3,16 @@
 module NETSNMP
   # Abstraction for the v3 semantics.
   class V3Session < Session
+    @context: String
+
+    @security_parameters: SecurityParameters
+
+    @message_serializer: Message
+
+    @engine_boots: Integer
+
+    @engine_time: Integer
+
     # @param [String, Integer] version SNMP version (always 3)
     # : (?context: String, **untyped) -> untyped
     def initialize: (?context: String, **untyped) -> untyped

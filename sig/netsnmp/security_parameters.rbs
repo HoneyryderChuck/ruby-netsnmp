@@ -15,6 +15,10 @@ module NETSNMP
 
     @priv_pass_key: String
 
+    @auth_key: String
+
+    @priv_key: String
+
     @priv_protocol: priv_protocol?
 
     @digest: OpenSSL::Digest

@@ -16,6 +16,8 @@ module NETSNMP
     #   type security_level = 0 | 1 | 3
     #   @auth_pass_key: String
     #   @priv_pass_key: String
+    #   @auth_key: String
+    #   @priv_key: String
     #   @priv_protocol: priv_protocol?
     #   @digest: OpenSSL::Digest
     #   @encryption: (Encryption::AES | Encryption::DES)?
@@ -80,6 +82,7 @@ module NETSNMP
       @engine_id = engine_id
       @auth_protocol = auth_protocol.to_sym unless auth_protocol.nil?
       @priv_protocol = priv_protocol.to_sym unless priv_protocol.nil?
+      @auth_key, @priv_key = nil
 
       if @security_level.positive?
         @auth_protocol ||= :md5 # this is the default

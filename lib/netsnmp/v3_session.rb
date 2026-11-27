@@ -3,6 +3,13 @@
 module NETSNMP
   # Abstraction for the v3 semantics.
   class V3Session < Session
+    # @rbs!
+    #   @context: String
+    #   @security_parameters: SecurityParameters
+    #   @message_serializer: Message
+    #   @engine_boots: Integer
+    #   @engine_time: Integer
+
     # @param [String, Integer] version SNMP version (always 3)
     #: (?context: String, **untyped) -> untyped
     def initialize(context: "", **opts)
@@ -10,6 +17,7 @@ module NETSNMP
       @security_parameters = opts.delete(:security_parameters)
       super
       @message_serializer = Message.new(**opts)
+      @engine_boots, @engine_time = nil
     end
 
     # @see {NETSNMP::Session#build_pdu}
