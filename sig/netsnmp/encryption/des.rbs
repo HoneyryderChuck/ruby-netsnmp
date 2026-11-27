@@ -1,0 +1,32 @@
+# Generated from lib/netsnmp/encryption/des.rb with RBS::Inline
+
+module NETSNMP
+  module Encryption
+    class DES
+      @priv_key: String
+
+      @local: Integer
+
+      # : (String priv_key, ?local: Integer) -> void
+      def initialize: (String priv_key, ?local: Integer) -> void
+
+      # : (String decrypted_data, engine_boots: Integer, **untyped) -> [String, String]
+      def encrypt: (String decrypted_data, engine_boots: Integer, **untyped) -> [ String, String ]
+
+      # : (String encrypted_data, salt: String, **untyped) -> String
+      def decrypt: (String encrypted_data, salt: String, **untyped) -> String
+
+      private
+
+      # 8.1.1.1
+      # : (Integer boots) -> [String, String]
+      def generate_encryption_key: (Integer boots) -> [ String, String ]
+
+      # : (String salt) -> String
+      def generate_decryption_key: (String salt) -> String
+
+      # : -> String
+      def des_key: () -> String
+    end
+  end
+end

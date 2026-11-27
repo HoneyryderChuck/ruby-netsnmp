@@ -1,0 +1,48 @@
+# Generated from lib/netsnmp/message.rb with RBS::Inline
+
+module NETSNMP
+  # Factory for the SNMP v3 Message format
+  class Message
+    include Loggable
+
+    PRIVNONE: OpenSSL::ASN1::OctetString
+
+    MSG_MAX_SIZE: OpenSSL::ASN1::Integer
+
+    MSG_SECURITY_MODEL: OpenSSL::ASN1::Integer
+
+    MSG_VERSION: OpenSSL::ASN1::Integer
+
+    MSG_REPORTABLE: ::Integer
+
+    # : (**untyped options) -> void
+    def initialize: (**untyped options) -> void
+
+    # : (String stream, String auth_param, Integer? security_level, security_parameters: SecurityParameters) -> void
+    def verify: (String stream, String auth_param, Integer? security_level, security_parameters: SecurityParameters) -> void
+
+    # @param [String] payload of an snmp v3 message which can be decoded
+    # @param [NETSMP::SecurityParameters, #decode] security_parameters knowns how to decode the stream
+    #
+    # @return [NETSNMP::ScopedPDU] the decoded PDU
+    #
+    # : (String stream, security_parameters: SecurityParameters) -> [ScopedPDU, String, Integer, Integer]
+    def decode: (String stream, security_parameters: SecurityParameters) -> [ ScopedPDU, String, Integer, Integer ]
+
+    # @param [NETSNMP::ScopedPDU] the PDU to encode in the message
+    # @param [NETSMP::SecurityParameters, #decode] security_parameters knowns how to decode the stream
+    #
+    # @return [String] the byte representation of an SNMP v3 Message
+    #
+    # : (ScopedPDU pdu, security_parameters: SecurityParameters, ?engine_boots: Integer, ?engine_time: Integer) -> String
+    def encode: (ScopedPDU pdu, security_parameters: SecurityParameters, ?engine_boots: Integer, ?engine_time: Integer) -> String
+
+    private
+
+    # https://datatracker.ietf.org/doc/html/rfc7860#section-4.2.2 part 3
+    # https://datatracker.ietf.org/doc/html/rfc3414#section-6.3.2 part 3
+    #
+    # : (Symbol?) -> OpenSSL::ASN1::ASN1Data
+    def authnone: (Symbol?) -> OpenSSL::ASN1::ASN1Data
+  end
+end

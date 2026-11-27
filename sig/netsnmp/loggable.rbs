@@ -1,0 +1,21 @@
+# Generated from lib/netsnmp/loggable.rb with RBS::Inline
+
+module NETSNMP
+  module Loggable
+    DEBUG: IO?
+
+    DEBUG_LEVEL: Integer
+
+    @debug: IO?
+
+    @debug_level: Integer
+
+    # : (?debug: IO, ?debug_level: Integer, **untyped) -> void
+    def initialize_logger: (?debug: IO, ?debug_level: Integer, **untyped) -> void
+
+    private
+
+    # : (?level: Integer) { () -> String } -> void
+    def log: (?level: Integer) { () -> String } -> void
+  end
+end

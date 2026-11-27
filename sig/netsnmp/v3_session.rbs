@@ -1,0 +1,40 @@
+# Generated from lib/netsnmp/v3_session.rb with RBS::Inline
+
+module NETSNMP
+  # Abstraction for the v3 semantics.
+  class V3Session < Session
+    # @param [String, Integer] version SNMP version (always 3)
+    # : (?context: String, **untyped) -> untyped
+    def initialize: (?context: String, **untyped) -> untyped
+
+    # @see {NETSNMP::Session#build_pdu}
+    #
+    # @return [NETSNMP::ScopedPDU] a pdu
+    #
+    # : (pdu_type, *untyped) -> ScopedPDU
+    def build_pdu: (pdu_type, *untyped) -> ScopedPDU
+
+    # @see {NETSNMP::Session#send}
+    # : (ScopedPDU pdu) -> (PDU | [PDU, String, Integer, Integer])
+    def send: (ScopedPDU pdu) -> (PDU | [ PDU, String, Integer, Integer ])
+
+    private
+
+    # : (**untyped) -> void
+    def validate: (**untyped) -> void
+
+    # : -> SecurityParameters
+    def security_parameters: () -> SecurityParameters
+
+    # sends a probe snmp v3 request, to get the additional info with which to handle the security aspect
+    #
+    # : -> String
+    def probe_for_engine: () -> String
+
+    # : (ScopedPDU) -> String
+    def encode: (ScopedPDU) -> String
+
+    # : (String, ?security_parameters: SecurityParameters) -> [PDU, String, Integer, Integer]
+    def decode: (String, ?security_parameters: SecurityParameters) -> [ PDU, String, Integer, Integer ]
+  end
+end

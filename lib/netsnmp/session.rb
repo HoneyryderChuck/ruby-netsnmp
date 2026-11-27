@@ -6,9 +6,23 @@ module NETSNMP
   class Session
     include Loggable
 
+    # @rbs!
+    #   interface _Transport
+    #     def close: () -> void
+    #
+    #     def send: (String payload) -> String
+    #   end
+    #
+    #   @transport: _Transport
+    #   @proxy: bool?
+    #   @version: 0 | 1 | 3
+    #   @community: String?
+
     TIMEOUT = 2
 
     # @param [Hash] opts the options set
+    #
+    #: (?version: snmp_version, ?community: String, **untyped) -> void
     def initialize(version: 1, community: "public", **options)
       @version = case version
                  when Integer then version # assume the use know what he's doing
@@ -24,6 +38,7 @@ module NETSNMP
     end
 
     # Closes the session
+    #: -> void
     def close
       # if the transport came as an argument,
       # then let the outer realm care for its lifecycle
@@ -35,6 +50,7 @@ module NETSNMP
     #
     # @return [NETSNMP::PDU] a pdu
     #
+    #: (pdu_type, *untyped) -> PDU
     def build_pdu(type, *vars)
       PDU.build(type, version: @version, community: @community, varbinds: vars)
     end
@@ -45,6 +61,7 @@ module NETSNMP
     #
     # @return [NETSNMP::PDU] the response pdu
     #
+    #: (PDU) -> PDU
     def send(pdu)
       log { "sending request..." }
       log(level: 2) { pdu.to_hex }
@@ -60,6 +77,7 @@ module NETSNMP
 
     private
 
+    #: (?host: String?, ?port: Integer, ?proxy: _Transport, ?timeout: Integer, **untyped) -> void
     def validate(host: nil, port: 161, proxy: nil, timeout: TIMEOUT, **)
       if proxy
         @proxy = true
@@ -72,32 +90,42 @@ module NETSNMP
     end
 
     class Transport
-      MAXPDUSIZE = 0xffff + 1
+      MAXPDUSIZE = 0xffff + 1 #: Integer
 
+      # @rbs!
+      #   @socket: UDPSocket
+      #   @destaddr: String
+      #   @timeout: Integer
+
+      #: (String host, Integer port, timeout: Integer) -> void
       def initialize(host, port, timeout:)
         @socket = UDPSocket.new
         @destaddr = Socket.sockaddr_in(port, host)
         @timeout = timeout
       end
 
+      #: -> void
       def close
         @socket.close
       end
 
+      #: (String pdu_der) -> String
       def send(payload)
         write(payload)
         recv
       end
 
-      SOCK_FLAGS = Socket.const_defined?(:MSG_DONTWAIT) ? Socket::MSG_DONTWAIT : 0
+      SOCK_FLAGS = Socket.const_defined?(:MSG_DONTWAIT) ? Socket::MSG_DONTWAIT : 0 #: Integer
 
       if RUBY_ENGINE == "jruby"
+        # @rbs skip
         def write(payload)
           perform_io do
             @socket.send(payload, SOCK_FLAGS, @destaddr)
           end
         end
 
+        # @rbs skip
         def recv(bytesize = MAXPDUSIZE)
           perform_io do
             datagram, = @socket.recv_nonblock(bytesize, SOCK_FLAGS)
@@ -105,12 +133,14 @@ module NETSNMP
           end
         end
       else
+        #: (String data) -> void
         def write(payload)
           perform_io do
             @socket.sendmsg(payload, SOCK_FLAGS, @destaddr)
           end
         end
 
+        #: (?Integer size) -> String
         def recv(bytesize = MAXPDUSIZE)
           perform_io do
             datagram, = @socket.recvmsg_nonblock(bytesize, SOCK_FLAGS)
@@ -121,6 +151,7 @@ module NETSNMP
 
       private
 
+      #: [U] { () -> U } -> U
       def perform_io
         loop do
           begin
@@ -133,6 +164,7 @@ module NETSNMP
         end
       end
 
+      #: (:wait_readable | :wait_writable) -> void
       def wait(mode)
         return if @socket.__send__(mode, @timeout)
 

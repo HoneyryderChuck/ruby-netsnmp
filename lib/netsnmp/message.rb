@@ -7,16 +7,18 @@ module NETSNMP
 
     include Loggable
 
-    PRIVNONE           = OpenSSL::ASN1::OctetString.new("")
-    MSG_MAX_SIZE       = OpenSSL::ASN1::Integer.new(65507).with_label(:max_message_size)
-    MSG_SECURITY_MODEL = OpenSSL::ASN1::Integer.new(3).with_label(:security_model) # usmSecurityModel
-    MSG_VERSION        = OpenSSL::ASN1::Integer.new(3).with_label(:message_version)
+    PRIVNONE           = OpenSSL::ASN1::OctetString.new("") #: OpenSSL::ASN1::OctetString
+    MSG_MAX_SIZE       = OpenSSL::ASN1::Integer.new(65507).with_label(:max_message_size) #: OpenSSL::ASN1::Integer
+    MSG_SECURITY_MODEL = OpenSSL::ASN1::Integer.new(3).with_label(:security_model) #: OpenSSL::ASN1::Integer
+    MSG_VERSION        = OpenSSL::ASN1::Integer.new(3).with_label(:message_version) #: OpenSSL::ASN1::Integer
     MSG_REPORTABLE     = 4
 
+    #: (**untyped options) -> void
     def initialize(**args)
       initialize_logger(**args)
     end
 
+    #: (String stream, String auth_param, Integer? security_level, security_parameters: SecurityParameters) -> void
     def verify(stream, auth_param, security_level, security_parameters:)
       security_parameters.verify(stream.sub(auth_param, authnone(security_parameters.auth_protocol).value), auth_param, security_level: security_level)
     end
@@ -26,6 +28,7 @@ module NETSNMP
     #
     # @return [NETSNMP::ScopedPDU] the decoded PDU
     #
+    #: (String stream, security_parameters: SecurityParameters) -> [ScopedPDU, String, Integer, Integer]
     def decode(stream, security_parameters:)
       log { "received encoded V3 message" }
       log { Hexdump.dump(stream) }
@@ -78,6 +81,7 @@ module NETSNMP
     #
     # @return [String] the byte representation of an SNMP v3 Message
     #
+    #: (ScopedPDU pdu, security_parameters: SecurityParameters, ?engine_boots: Integer, ?engine_time: Integer) -> String
     def encode(pdu, security_parameters:, engine_boots: 0, engine_time: 0)
       log(level: 2) { pdu.to_hex }
       log { "encoding PDU in V3 message..." }
@@ -130,6 +134,8 @@ module NETSNMP
 
     # https://datatracker.ietf.org/doc/html/rfc7860#section-4.2.2 part 3
     # https://datatracker.ietf.org/doc/html/rfc3414#section-6.3.2 part 3
+    #
+    #: (Symbol?) -> OpenSSL::ASN1::ASN1Data
     def authnone(auth_protocol)
       # https://datatracker.ietf.org/doc/html/rfc3414#section-3.1 part 8b
       return OpenSSL::ASN1::OctetString.new("").with_label(:auth_mask) unless auth_protocol

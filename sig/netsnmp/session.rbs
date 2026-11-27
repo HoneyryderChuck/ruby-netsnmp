@@ -1,0 +1,90 @@
+# Generated from lib/netsnmp/session.rb with RBS::Inline
+
+module NETSNMP
+  # Let's just remind that there is no session in snmp, this is just an abstraction.
+  class Session
+    include Loggable
+
+    interface _Transport
+      def close: () -> void
+
+      def send: (String payload) -> String
+    end
+
+    @transport: _Transport
+
+    @proxy: bool?
+
+    @version: 0 | 1 | 3
+
+    @community: String?
+
+    TIMEOUT: ::Integer
+
+    # @param [Hash] opts the options set
+    #
+    # : (?version: snmp_version, ?community: String, **untyped) -> void
+    def initialize: (?version: snmp_version, ?community: String, **untyped) -> void
+
+    # Closes the session
+    # : -> void
+    def close: () -> void
+
+    # @param [Symbol] type the type of PDU (:get, :set, :getnext)
+    # @param [Array<Hashes>] vars collection of options to generate varbinds (see {NETSMP::Varbind.new} for all the possible options)
+    #
+    # @return [NETSNMP::PDU] a pdu
+    #
+    # : (pdu_type, *untyped) -> PDU
+    def build_pdu: (pdu_type, *untyped) -> PDU
+
+    # send a pdu, receives a pdu
+    #
+    # @param [NETSNMP::PDU, #to_der] an encodable request pdu
+    #
+    # @return [NETSNMP::PDU] the response pdu
+    #
+    # : (PDU) -> PDU
+    def send: (PDU) -> PDU
+
+    private
+
+    # : (?host: String?, ?port: Integer, ?proxy: _Transport, ?timeout: Integer, **untyped) -> void
+    def validate: (?host: String?, ?port: Integer, ?proxy: _Transport, ?timeout: Integer, **untyped) -> void
+
+    class Transport
+      MAXPDUSIZE: Integer
+
+      @socket: UDPSocket
+
+      @destaddr: String
+
+      @timeout: Integer
+
+      # : (String host, Integer port, timeout: Integer) -> void
+      def initialize: (String host, Integer port, timeout: Integer) -> void
+
+      # : -> void
+      def close: () -> void
+
+      # : (String pdu_der) -> String
+      def send: (String pdu_der) -> String
+
+      SOCK_FLAGS: Integer
+
+      # : (String data) -> void
+      def write: (String data) -> void
+
+      # : (?Integer size) -> String
+      def recv: (?Integer size) -> String
+
+      private
+
+      # : [U] { () -> U } -> U
+      def perform_io: [U] () { () -> U } -> U
+
+      # : (:wait_readable | :wait_writable) -> void
+      def wait: (:wait_readable | :wait_writable) -> void
+    end
+  end
+end

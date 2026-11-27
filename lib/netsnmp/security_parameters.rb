@@ -12,8 +12,17 @@ module NETSNMP
 
     include Loggable
 
-    IPAD = "\x36" * 64
-    OPAD = "\x5c" * 64
+    # @rbs!
+    #   type security_level = 0 | 1 | 3
+    #   @auth_pass_key: String
+    #   @priv_pass_key: String
+    #   @priv_protocol: priv_protocol?
+    #   @digest: OpenSSL::Digest
+    #   @encryption: (Encryption::AES | Encryption::DES)?
+    #   @timeliness: Integer
+
+    IPAD = "\x36" * 64 #: String
+    OPAD = "\x5c" * 64 #: String
 
     # Timeliness is part of SNMP V3 Security
     # The topic is described very nice here https://www.snmpsharpnet.com/?page_id=28
@@ -22,7 +31,13 @@ module NETSNMP
     # The 150 Seconds is specified in https://www.ietf.org/rfc/rfc2574.txt 2.2.3
     TIMELINESS_THRESHOLD = 150
 
-    attr_reader :security_level, :username, :auth_protocol, :engine_id
+    attr_reader :security_level #: Integer
+
+    attr_reader :username #: String
+
+    attr_reader :auth_protocol #: auth_protocol?
+
+    attr_reader :engine_id #: String
 
     # @param [String] username the snmp v3 username
     # @param [String] engine_id the device engine id (initialized to '' for report)
@@ -37,6 +52,13 @@ module NETSNMP
     #   mandatory; if :auth_priv, the sentence before applies, and :priv_protocol will be coerced to :des (if
     #   not explicitly set), and :priv_password becomes mandatory.
     #
+    # @rbs username: String
+    # @rbs engine_id: String
+    # @rbs security_level: Integer | :noauth | :auth_no_priv | :auth_priv | nil
+    # @rbs auth_protocol: auth_protocol?
+    # @rbs auth_password: String | nil
+    # @rbs priv_protocol: priv_protocol?
+    # @rbs priv_password: String | nil
     def initialize(
       username:,
       engine_id: "",
@@ -76,6 +98,7 @@ module NETSNMP
       initialize_logger(**options)
     end
 
+    #: (String id) -> void
     def engine_id=(id)
       @timeliness = Process.clock_gettime(Process::CLOCK_MONOTONIC, :second)
       @engine_id = id
@@ -88,6 +111,8 @@ module NETSNMP
     #
     # @return [Array] a pair, where the first argument in the asn structure with the encoded pdu,
     #    and the second is the calculated salt (if it has been encrypted)
+    #
+    #: (PDU pdu, salt: OpenSSL::ASN1::ASN1Data, engine_time: Integer, engine_boots: Integer) -> [OpenSSL::ASN1::ASN1Data, OpenSSL::ASN1::ASN1Data]
     def encode(pdu, salt:, engine_time:, engine_boots:)
       encryptor = encryption
 
@@ -107,6 +132,8 @@ module NETSNMP
     # @param [String] salt the salt from the incoming der
     # @param [Integer] engine_time the reported engine time
     # @param [Integer] engine_boots the reported engine boots
+    #
+    #: (OpenSSL::ASN1::ASN1Data | String der, salt: String, engine_time: Integer, engine_boots: Integer, ?security_level: Integer) -> OpenSSL::ASN1::ASN1Data
     def decode(der, salt:, engine_time:, engine_boots:, security_level: @security_level)
       asn = OpenSSL::ASN1.decode(der)
       return asn if security_level < 3
@@ -124,6 +151,8 @@ module NETSNMP
     # @return [String] the digest signature of the message payload
     #
     # @note this method is used in the process of authenticating a message
+    #
+    #: (String message) -> String?
     def sign(message)
       # don't sign unless you have to
       return unless @auth_protocol
@@ -166,6 +195,8 @@ module NETSNMP
     # @param [String] salt the incoming payload''s salt
     #
     # @raise [NETSNMP::Error] if the message's integration has been violated
+    #
+    #: (String stream, String salt, ?security_level: Integer?) -> void
     def verify(stream, salt, security_level: @security_level)
       return if security_level.nil? || security_level < 1
 
@@ -175,6 +206,7 @@ module NETSNMP
       log(level: 2) { "message has been verified" }
     end
 
+    #: -> bool
     def must_revalidate?
       return @engine_id.empty? unless authorizable?
       return true if @engine_id.empty? || @timeliness.nil?
@@ -184,10 +216,12 @@ module NETSNMP
 
     private
 
+    #: -> String
     def auth_key
       @auth_key ||= localize_key(@auth_pass_key)
     end
 
+    #: -> String
     def priv_key
       @priv_key ||= begin
         key = localize_key(@priv_pass_key)
@@ -205,6 +239,7 @@ module NETSNMP
       end
     end
 
+    #: (String key) -> String
     def localize_key(key)
       digest.reset
       digest << key
@@ -214,6 +249,7 @@ module NETSNMP
       digest.digest
     end
 
+    #: (String password) -> String
     def passkey(password)
       digest.reset
       password_index = 0
@@ -243,6 +279,7 @@ module NETSNMP
       dig || ""
     end
 
+    #: -> OpenSSL::Digest
     def digest
       @digest ||= case @auth_protocol
                   when :md5 then OpenSSL::Digest.new("MD5")
@@ -256,6 +293,7 @@ module NETSNMP
                   end
     end
 
+    #: -> (Encryption::AES | Encryption::DES)?
     def encryption
       @encryption ||= case @priv_protocol
                       when :des then Encryption::DES.new(priv_key)
@@ -263,6 +301,7 @@ module NETSNMP
                       end
     end
 
+    #: -> bool
     def authorizable?
       @auth_protocol != :none
     end

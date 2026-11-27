@@ -1,0 +1,13 @@
+# Generated from lib/netsnmp/encryption/none.rb with RBS::Inline
+
+module NETSNMP
+  module Encryption
+    class None
+      def initialize: (*untyped) -> untyped
+
+      def encrypt: (untyped pdu) -> untyped
+
+      def decrypt: (untyped stream, *untyped) -> untyped
+    end
+  end
+end

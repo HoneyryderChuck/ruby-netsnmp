@@ -54,7 +54,7 @@ if [[ "$RUBY_ENGINE" = "java" && ${RUBY_VERSION:0:1} = "4" ]]; then
   export RUBYOPT='-rbundler/setup -rrbs/test/setup'
   export RBS_TEST_RAISE=true
   export RBS_TEST_LOGLEVEL=error
-  export RBS_TEST_OPT='-Isig -ripaddr -ropenssl -rsocket'
+  export RBS_TEST_OPT='-Isig -Isig_stubs -ripaddr -ropenssl -rsocket'
   export RBS_TEST_TARGET='NETSNMP*'
 fi
 

@@ -10,6 +10,10 @@ AllCops:
 Bundler/DuplicatedGem:
   Enabled: false
 
+Layout/LeadingCommentSpace:
+  AllowRBSInlineAnnotation: true
+  AllowSteepAnnotation: true
+
 Lint/SuppressedException:
   Exclude:
     - Rakefile

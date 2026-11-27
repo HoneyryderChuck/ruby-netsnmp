@@ -3,6 +3,13 @@
 module NETSNMP
   module Encryption
     class AES
+      # @rbs!
+      #   type aes_type_protocol = :aes | :aes128 | :aes192 | :aes256
+      #   @priv_key: String
+      #   @local: Integer
+      #   @cipher: aes_type_protocol
+
+      #: (String priv_key, cipher: aes_type_protocol, ?local: Integer) -> void
       def initialize(priv_key, cipher:, local: 0)
         @priv_key = priv_key
         @local = local
@@ -12,6 +19,7 @@ module NETSNMP
         @cipher = cipher
       end
 
+      #: (String decrypted_data, engine_boots: Integer, engine_time: Integer) -> [String, String]
       def encrypt(decrypted_data, engine_boots:, engine_time:)
         cipher = case @cipher
                  when :aes, :aes128 then OpenSSL::Cipher.new("aes-128-cfb")
@@ -40,6 +48,7 @@ module NETSNMP
         [encrypted_data, salt]
       end
 
+      #: (String encrypted_data, salt: String, engine_boots: Integer, engine_time: Integer) -> String
       def decrypt(encrypted_data, salt:, engine_boots:, engine_time:)
         raise Error, "invalid priv salt received" unless !salt.empty? && (salt.length % 8).zero?
 
@@ -63,13 +72,14 @@ module NETSNMP
                     end || ""
         decrypted_data = cipher.update(encrypted_data) + cipher.final
 
-        hlen, bodylen = OpenSSL::ASN1.traverse(decrypted_data) { |_, _, x, y, *| break x, y }
+        hlen, bodylen = OpenSSL::ASN1.traverse(decrypted_data) { |_, _, x, y, *| break x, y } #: [Integer, Integer]
         decrypted_data.byteslice(0, hlen + bodylen) || "".b
       end
 
       private
 
       # 8.1.1.1
+      #: (Integer boots, Integer time) -> [String, String]
       def generate_encryption_key(boots, time)
         salt = [0xff & (@local >> 56),
                 0xff & (@local >> 48),
@@ -91,6 +101,7 @@ module NETSNMP
         [iv, salt]
       end
 
+      #: (Integer boots, Integer time, String salt) -> String
       def generate_decryption_key(boots, time, salt)
         [0xff & (boots >> 24),
          0xff & (boots >> 16),
@@ -102,6 +113,7 @@ module NETSNMP
          0xff &  time].pack("c*") + salt
       end
 
+      #: -> String
       def aes_key
         case @cipher
         when :aes, :aes128 then @priv_key[0, 16]

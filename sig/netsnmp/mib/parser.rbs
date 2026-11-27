@@ -1,0 +1,6 @@
+# Generated from lib/netsnmp/mib/parser.rb with RBS::Inline
+
+module NETSNMP::MIB
+  class Parser < Parslet::Parser
+  end
+end

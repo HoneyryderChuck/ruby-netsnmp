@@ -9,9 +9,42 @@ require "ipaddr"
 # core structures
 
 module NETSNMP
+  # @rbs!
+  #  type oid = String | Array[_ToS]
+  #
+  #  type oid_type = Integer | :ipaddress | :counter32 | :gauge | :timetick | :opaque | :nsap | :counter64 | :uinteger
+  #
+  #  type oid_value = String | Integer | Timetick | true | false | nil | IPAddr
+  #
+  #  type pdu_type = :get | :getnext | :set | :inform | :trap | :response
+  #
+  #  type auth_protocol = :md5 | :sha | :sha1 | :sha224 | :sha256 | :sha384 | :sha512
+  #
+  #  type priv_protocol = :aes | :aes128 | :aes192 | :aes256 | :des
+  #
+  #  type varbind_options = {oid: String, value: Varbind::varbind_value }
+  #                       | {oid: String, value: Varbind::varbind_value, type: oid_type}
+  #
+  #  interface _Logger
+  #    def <<: (string) -> void
+  #  end
+  #
+  #  interface _Authenticate
+  #    def reset: () -> void
+  #    def <<: (string) -> void
+  #    def digest: () -> String
+  #  end
+  #
+  #  interface _ToAsn
+  #    def to_asn: () -> OpenSSL::ASN1::ASN1Data
+  #  end
+  #
+  #  type snmp_version = 0 | 1 | 3 | :v1 | :v2c | :v3 | String | nil
+
   begin
     require "xorcist"
     require "xorcist/refinements"
+    # @rbs skip
     XorExtensions = Xorcist::Refinements
   rescue LoadError
     # "no xorcist"

@@ -76,4 +76,12 @@ namespace :coverage do
   end
 end
 
+namespace :sig do
+  desc "Export the inline annotations in lib/ to sig/"
+  task :export do
+    rm_rf "sig"
+    sh "bundle", "exec", "rbs-inline", "--opt-out", "--output=sig", "lib"
+  end
+end
+
 task default: [:spec]

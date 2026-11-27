@@ -2,12 +2,17 @@
 
 module NETSNMP
   class Timetick < Numeric
+    # @rbs @ticks: Integer
+
     # @param [Integer] ticks number of microseconds since the time it was read
+    #
+    #: (Integer ticks) -> untyped
     def initialize(ticks)
       @ticks = ticks
       super()
     end
 
+    #: -> String
     def to_s
       days = days_since
       hours = hours_since(days)
@@ -16,52 +21,64 @@ module NETSNMP
       "Timeticks: (#{@ticks}) #{days.to_i} days, #{hours.to_i}:#{minutes.to_i}:#{milliseconds.to_f.round(2)}"
     end
 
+    #: -> Integer
     def to_i
       @ticks
     end
 
+    #: -> OpenSSL::ASN1::ASN1Data
     def to_asn
       OpenSSL::ASN1::ASN1Data.new([@ticks].pack("N"), 3, :APPLICATION)
     end
 
+    #: (Integer ticks) -> [instance, instance]
     def coerce(other)
       [Timetick.new(other), self]
     end
 
+    #: (_ToI other) -> Integer?
     def <=>(other)
       to_i <=> other.to_i
     end
 
+    #: (_ToI other) -> instance
     def +(other)
       Timetick.new(to_i + other.to_i)
     end
 
+    #: (_ToI other) -> instance
     def -(other)
       Timetick.new(to_i - other.to_i)
     end
 
+    #: (_ToI other) -> instance
     def *(other)
       Timetick.new(to_i * other.to_i)
     end
 
+    #: (_ToI other) -> instance
     def /(other)
       Timetick.new(to_i / other.to_i)
     end
 
     private
 
+    #: -> Rational
     def days_since
       Rational(@ticks, 8_640_000)
     end
 
+    #: (Rational) -> Rational
     def hours_since(days)
       Rational((days.to_f - days.to_i) * 24)
     end
 
+    #: (Rational) -> Rational
     def minutes_since(hours)
       Rational((hours.to_f - hours.to_i) * 60)
     end
 
+    #: (Rational) -> Rational
     def milliseconds_since(minutes)
       Rational((minutes.to_f - minutes.to_i) * 60)
     end

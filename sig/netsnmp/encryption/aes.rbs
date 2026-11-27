@@ -1,0 +1,36 @@
+# Generated from lib/netsnmp/encryption/aes.rb with RBS::Inline
+
+module NETSNMP
+  module Encryption
+    class AES
+      type aes_type_protocol = :aes | :aes128 | :aes192 | :aes256
+
+      @priv_key: String
+
+      @local: Integer
+
+      @cipher: aes_type_protocol
+
+      # : (String priv_key, cipher: aes_type_protocol, ?local: Integer) -> void
+      def initialize: (String priv_key, cipher: aes_type_protocol, ?local: Integer) -> void
+
+      # : (String decrypted_data, engine_boots: Integer, engine_time: Integer) -> [String, String]
+      def encrypt: (String decrypted_data, engine_boots: Integer, engine_time: Integer) -> [ String, String ]
+
+      # : (String encrypted_data, salt: String, engine_boots: Integer, engine_time: Integer) -> String
+      def decrypt: (String encrypted_data, salt: String, engine_boots: Integer, engine_time: Integer) -> String
+
+      private
+
+      # 8.1.1.1
+      # : (Integer boots, Integer time) -> [String, String]
+      def generate_encryption_key: (Integer boots, Integer time) -> [ String, String ]
+
+      # : (Integer boots, Integer time, String salt) -> String
+      def generate_decryption_key: (Integer boots, Integer time, String salt) -> String
+
+      # : -> String
+      def aes_key: () -> String
+    end
+  end
+end

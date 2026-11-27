@@ -13,6 +13,10 @@ module NETSNMP
   class Client
     RETRIES = 5
 
+    # @rbs!
+    #   @retries: Integer
+    #   @session: Session
+
     # @param [Hash] options the options to needed to enable the SNMP client.
     # @option options [String, Integer, nil] :version the version of the protocol (defaults to 3).
     #    also accepts common known declarations like :v3, "v2c", etc
@@ -23,6 +27,7 @@ module NETSNMP
     #      puts client.get(oid: "1.3.6.1.2.1.1.5.0")
     #    end
     #
+    #: (?version: snmp_version, **untyped) ?{ (instance) -> void } -> void
     def initialize(version: nil, **options)
       version = case version
                 when Integer then version # assume the use know what he's doing
@@ -30,7 +35,7 @@ module NETSNMP
                 when /v?2c?/ then 1
                 when /v?3/ then 3
                 else 3 # rubocop:disable Lint/DuplicateBranch
-                end
+                end #: 0 | 1 | 3
 
       @retries = options.fetch(:retries, RETRIES).to_i
       @session ||= version == 3 ? V3Session.new(**options) : Session.new(version: version, **options)
@@ -44,6 +49,7 @@ module NETSNMP
     end
 
     # Closes the inner section
+    #: -> void
     def close
       @session.close
     end
@@ -52,6 +58,7 @@ module NETSNMP
     #
     # @see {NETSNMP::Varbind#new}
     #
+    #: (*untyped) ?{ (PDU) -> void } -> untyped
     def get(*oid_opts)
       request = @session.build_pdu(:get, *oid_opts)
       response = handle_retries { @session.send(request) }
@@ -64,6 +71,7 @@ module NETSNMP
     #
     # @see {NETSNMP::Varbind#new}
     #
+    #: (*untyped) ?{ (PDU) -> void } -> untyped
     def get_next(*oid_opts)
       request = @session.build_pdu(:getnext, *oid_opts)
       response = handle_retries { @session.send(request) }
@@ -78,6 +86,7 @@ module NETSNMP
     #
     # @return [Enumerator] the enumerator-collection of the oid-value pairs
     #
+    #: (oid: oid) -> _Each[[oid_type, oid_value]]
     def walk(oid:)
       walkoid = OID.build(oid)
       Enumerator.new do |y|
@@ -128,6 +137,7 @@ module NETSNMP
     #
     # @see {NETSNMP::Varbind#new}
     #
+    #: (*untyped) ?{ (PDU) -> void } -> untyped
     def set(*oid_opts)
       request = @session.build_pdu(:set, *oid_opts)
       response = handle_retries { @session.send(request) }
@@ -140,6 +150,7 @@ module NETSNMP
     #
     # @see {NETSNMP::Varbind#new}
     #
+    #: (*untyped) ?{ (PDU) -> void } -> untyped
     def inform(*oid_opts)
       request = @session.build_pdu(:inform, *oid_opts)
       response = handle_retries { @session.send(request) }
@@ -151,6 +162,7 @@ module NETSNMP
     private
 
     # Handles timeout errors by reissuing the same pdu until it runs out or retries.
+    #: [U] { () -> U } -> U
     def handle_retries
       retries = @retries
       begin

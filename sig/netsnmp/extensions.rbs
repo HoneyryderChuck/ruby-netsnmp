@@ -1,0 +1,26 @@
+# Generated from lib/netsnmp/extensions.rb with RBS::Inline
+
+module NETSNMP
+  module IsNumericExtensions
+    # : -> bool
+    def integer?: () -> bool
+  end
+
+  module ASNExtensions
+    ASN_COLORS: Hash[singleton(OpenSSL::ASN1::ASN1Data), Integer]
+
+    # : -> String
+    def to_hex: () -> String
+  end
+
+  module Hexdump
+    # : (String, ?width: Integer, ?in_groups_if: Integer, ?separator: String)
+    def self?.dump: (untyped data, ?width: untyped, ?in_groups_of: untyped, ?separator: untyped) -> untyped
+  end
+
+  # Like a string, but it prints an hex-string version of itself
+  class HexString < String
+    # : -> String
+    def self?.inspect: () -> String
+  end
+end
