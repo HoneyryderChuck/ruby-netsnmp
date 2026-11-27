@@ -1,0 +1,9 @@
+# shim for patches added by xorcist
+class String
+  def xor: (String) -> String
+end
+
+module Xorcist
+  module Refinements
+  end
+end
