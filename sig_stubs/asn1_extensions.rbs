@@ -1,0 +1,12 @@
+# shim for refinements
+class OpenSSL::ASN1::ASN1Data
+  attr_reader label: Symbol | String | nil
+
+  def with_label: (Symbol | String label ) -> self
+
+  def to_hex: () -> String
+
+  private
+
+  def colorize_hex: (?String der) -> String
+end

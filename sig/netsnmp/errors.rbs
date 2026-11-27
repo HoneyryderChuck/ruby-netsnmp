@@ -1,3 +1,5 @@
+# Generated from lib/netsnmp/errors.rb with RBS::Inline
+
 module NETSNMP
   class Error < StandardError
   end
@@ -12,5 +14,8 @@ module NETSNMP
   end
 
   class IdNotInTimeWindowError < Error
+  end
+
+  class OidNotFound < StandardError
   end
 end

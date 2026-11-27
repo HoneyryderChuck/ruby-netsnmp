@@ -3,23 +3,35 @@
 module NETSNMP
   # Abstraction for the v3 semantics.
   class V3Session < Session
+    # @rbs!
+    #   @context: String
+    #   @security_parameters: SecurityParameters
+    #   @message_serializer: Message
+    #   @engine_boots: Integer
+    #   @engine_time: Integer
+
     # @param [String, Integer] version SNMP version (always 3)
+    #: (?context: String, **untyped) -> untyped
     def initialize(context: "", **opts)
       @context = context
       @security_parameters = opts.delete(:security_parameters)
       super
       @message_serializer = Message.new(**opts)
+      @engine_boots, @engine_time = nil
     end
 
     # @see {NETSNMP::Session#build_pdu}
     #
     # @return [NETSNMP::ScopedPDU] a pdu
+    #
+    #: (pdu_type, *untyped) -> ScopedPDU
     def build_pdu(type, *vars)
       engine_id = security_parameters.engine_id
       ScopedPDU.build(type, engine_id: engine_id, context: @context, varbinds: vars)
     end
 
     # @see {NETSNMP::Session#send}
+    #: (ScopedPDU pdu) -> (PDU | [PDU, String, Integer, Integer])
     def send(pdu)
       log { "sending request..." }
       encoded_request = encode(pdu)
@@ -30,6 +42,7 @@ module NETSNMP
 
     private
 
+    #: (**untyped) -> void
     def validate(**options)
       super
       if (s = @security_parameters)
@@ -51,6 +64,7 @@ module NETSNMP
       end
     end
 
+    #: -> SecurityParameters
     def security_parameters
       @security_parameters.engine_id = probe_for_engine if @security_parameters.must_revalidate?
       @security_parameters
@@ -58,6 +72,7 @@ module NETSNMP
 
     # sends a probe snmp v3 request, to get the additional info with which to handle the security aspect
     #
+    #: -> String
     def probe_for_engine
       report_sec_params = SecurityParameters.new(security_level: 0,
                                                  username: @security_parameters.username)
@@ -71,12 +86,14 @@ module NETSNMP
       engine_id
     end
 
+    #: (ScopedPDU) -> String
     def encode(pdu)
       @message_serializer.encode(pdu, security_parameters: @security_parameters,
                                       engine_boots: @engine_boots,
                                       engine_time: @engine_time)
     end
 
+    #: (String, ?security_parameters: SecurityParameters) -> [PDU, String, Integer, Integer]
     def decode(stream, security_parameters: @security_parameters)
       return_pdu = @message_serializer.decode(stream, security_parameters: security_parameters)
 

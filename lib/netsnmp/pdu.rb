@@ -11,6 +11,7 @@ module NETSNMP
 
     using ASNExtensions
     class << self
+      #: [T] (String | OpenSSL::ASN1::ASN1Data der, **untyped vars) -> instance
       def decode(der, **args)
         der = OpenSSL::ASN1.decode(der) if der.is_a?(String)
 
@@ -44,6 +45,7 @@ module NETSNMP
       #
       # @param [Symbol] type the type of pdu structure to build
       #
+      #: (pdu_type, **untyped) -> instance
       def build(type, **args)
         typ = case type
               when :get       then 0
@@ -60,8 +62,26 @@ module NETSNMP
       end
     end
 
-    attr_reader :varbinds, :type, :version, :community, :request_id
+    attr_reader :varbinds #: Array[Varbind]
 
+    attr_reader :type #: Integer
+
+    attr_reader :version #: Integer
+
+    attr_reader :community #: String?
+
+    attr_reader :request_id #: Integer
+
+    # @rbs @error_index: Integer
+    # @rbs @error_status: Integer
+
+    # @rbs type: Integer
+    # @rbs version: Integer
+    # @rbs community: String?
+    # @rbs request_id: Integer
+    # @rbs error_status: Integer
+    # @rbs error_index: Integer
+    # @rbs varbinds: Array[varbind_options]
     def initialize(type:,
                    version:,
                    community:,
@@ -82,10 +102,12 @@ module NETSNMP
       check_error_status(@error_status)
     end
 
+    #: -> String
     def to_der
       to_asn.to_der
     end
 
+    #: -> String
     def to_hex
       to_asn.to_hex
     end
@@ -95,11 +117,14 @@ module NETSNMP
     # @param [OID] oid a valid oid
     # @param [Hash] options additional request varbind options
     # @option options [Object] :value the value for the oid
+    #
+    #: (oid: String, **untyped varbind_options) -> void
     def add_varbind(oid:, **options)
       @varbinds << Varbind.new(oid, **options)
     end
     alias << add_varbind
 
+    #: -> OpenSSL::ASN1::ASN1Data
     def to_asn
       request_id_asn = OpenSSL::ASN1::Integer.new(@request_id).with_label(:request_id)
       error_asn = OpenSSL::ASN1::Integer.new(@error_status).with_label(:error)
@@ -117,6 +142,7 @@ module NETSNMP
 
     private
 
+    #: -> [OpenSSL::ASN1::Integer, OpenSSL::ASN1::OctetString]
     def encode_headers_asn
       [
         OpenSSL::ASN1::Integer.new(@version).with_label(:snmp_version),
@@ -125,6 +151,8 @@ module NETSNMP
     end
 
     # http://www.tcpipguide.com/free/t_SNMPVersion2SNMPv2MessageFormats-5.htm#Table_219
+    #
+    #: (Integer) -> void
     def check_error_status(status)
       return if status.zero?
 

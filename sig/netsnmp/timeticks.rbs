@@ -1,0 +1,53 @@
+# Generated from lib/netsnmp/timeticks.rb with RBS::Inline
+
+module NETSNMP
+  class Timetick < Numeric
+    @ticks: Integer
+
+    # @param [Integer] ticks number of microseconds since the time it was read
+    #
+    # : (Integer ticks) -> untyped
+    def initialize: (Integer ticks) -> untyped
+
+    # : -> String
+    def to_s: () -> String
+
+    # : -> Integer
+    def to_i: () -> Integer
+
+    # : -> OpenSSL::ASN1::ASN1Data
+    def to_asn: () -> OpenSSL::ASN1::ASN1Data
+
+    # : (Integer ticks) -> [instance, self]
+    def coerce: (Integer ticks) -> [ instance, self ]
+
+    # : (_ToI other) -> Integer?
+    def <=>: (_ToI other) -> Integer?
+
+    # : (_ToI other) -> instance
+    def +: (_ToI other) -> instance
+
+    # : (_ToI other) -> instance
+    def -: (_ToI other) -> instance
+
+    # : (_ToI other) -> instance
+    def *: (_ToI other) -> instance
+
+    # : (_ToI other) -> instance
+    def /: (_ToI other) -> instance
+
+    private
+
+    # : -> Rational
+    def days_since: () -> Rational
+
+    # : (Rational) -> Rational
+    def hours_since: (Rational) -> Rational
+
+    # : (Rational) -> Rational
+    def minutes_since: (Rational) -> Rational
+
+    # : (Rational) -> Rational
+    def milliseconds_since: (Rational) -> Rational
+  end
+end

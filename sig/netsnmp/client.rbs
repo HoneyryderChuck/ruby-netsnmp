@@ -1,0 +1,77 @@
+# Generated from lib/netsnmp/client.rb with RBS::Inline
+
+module NETSNMP
+  # Main Entity, provides the user-facing API to communicate with SNMP Agents
+  #
+  # Under the hood it creates a "session" (analogous to the net-snmp C session), which will be used
+  # to proxy all the communication to the agent. the Client ensures that you only write pure ruby and
+  # read pure ruby, not concerning with snmp-speak like PDUs, varbinds and the like.
+  #
+  class Client
+    RETRIES: ::Integer
+
+    @retries: Integer
+
+    @session: Session
+
+    # @param [Hash] options the options to needed to enable the SNMP client.
+    # @option options [String, Integer, nil] :version the version of the protocol (defaults to 3).
+    #    also accepts common known declarations like :v3, "v2c", etc
+    # @option options [Integer] :retries number of retries for each failed PDU (after which it raise timeout error. Defaults to {RETRIES} retries)
+    # @yield [client] the instantiated client, after which it closes it for use.
+    # @example Yielding a clinet
+    #    NETSNMP::Client.new(host: "241.232.22.12") do |client|
+    #      puts client.get(oid: "1.3.6.1.2.1.1.5.0")
+    #    end
+    #
+    # : (?version: snmp_version, **untyped) ?{ (self) -> void } -> void
+    def initialize: (?version: snmp_version, **untyped) ?{ (self) -> void } -> void
+
+    # Closes the inner section
+    # : -> void
+    def close: () -> void
+
+    # Performs an SNMP GET Request
+    #
+    # @see {NETSNMP::Varbind#new}
+    #
+    # : (*untyped) ?{ (PDU) -> void } -> untyped
+    def get: (*untyped) ?{ (PDU) -> void } -> untyped
+
+    # Performs an SNMP GETNEXT Request
+    #
+    # @see {NETSNMP::Varbind#new}
+    #
+    # : (*untyped) ?{ (PDU) -> void } -> untyped
+    def get_next: (*untyped) ?{ (PDU) -> void } -> untyped
+
+    # Perform a SNMP Walk (issues multiple subsequent GENEXT requests within the subtree rooted on an OID)
+    #
+    # @param [String] oid the root oid from the subtree
+    #
+    # @return [Enumerator] the enumerator-collection of the oid-value pairs
+    #
+    # : (oid: oid) -> _Each[[oid_type, oid_value]]
+    def walk: (oid: oid) -> _Each[[ oid_type, oid_value ]]
+
+    # Perform a SNMP SET Request
+    #
+    # @see {NETSNMP::Varbind#new}
+    #
+    # : (*untyped) ?{ (PDU) -> void } -> untyped
+    def set: (*untyped) ?{ (PDU) -> void } -> untyped
+
+    # Perform a SNMP INFORM Request
+    #
+    # @see {NETSNMP::Varbind#new}
+    #
+    # : (*untyped) ?{ (PDU) -> void } -> untyped
+    def inform: (*untyped) ?{ (PDU) -> void } -> untyped
+
+    private
+
+    # Handles timeout errors by reissuing the same pdu until it runs out or retries.
+    # : [U] { () -> U } -> U
+    def handle_retries: [U] () { () -> U } -> U
+  end
+end

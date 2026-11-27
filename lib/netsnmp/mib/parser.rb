@@ -6,6 +6,7 @@ module NETSNMP::MIB
   class Parser < Parslet::Parser
     root :mibfile
 
+    # @rbs skip
     def spaced(character = nil)
       if character.nil? && block_given?
         yield >> space.repeat
@@ -14,18 +15,22 @@ module NETSNMP::MIB
       end
     end
 
+    # @rbs skip
     def curly(atom)
       str("{") >> space.repeat >> atom >> space.repeat >> str("}")
     end
 
+    # @rbs skip
     def bracketed(atom)
       str("(") >> space.repeat >> atom >> space.repeat >> str(")")
     end
 
+    # @rbs skip
     def square_bracketed(atom)
       str("[") >> space.repeat >> atom >> space.repeat >> str("]")
     end
 
+    # @rbs skip
     def with_separator(atom, separator = nil)
       if separator
         sep = if separator.is_a?(String)

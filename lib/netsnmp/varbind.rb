@@ -4,22 +4,33 @@ module NETSNMP
   # Abstracts the PDU variable structure into a ruby object
   #
   class Varbind
-    attr_reader :oid, :value
+    # @rbs!
+    #   type varbind_value = OpenSSL::ASN1::OctetString | OpenSSL::ASN1::Primitive | OpenSSL::ASN1::ASN1Data | oid_value
+    #
+    #   @type: oid_type?
 
+    attr_reader :oid #: String
+
+    attr_reader :value #: oid_value
+
+    #: (oid, ?value: varbind_value, ?type: oid_type) -> untyped
     def initialize(oid, value: nil, type: nil)
       @oid = OID.build(oid)
       @type = type
       @value = convert_val(value) if value
     end
 
+    #: -> String
     def to_s
       "#<#{self.class}:0x#{object_id.to_s(16)} @oid=#{@oid} @value=#{@value}>"
     end
 
+    #: -> String
     def to_der
       to_asn.to_der
     end
 
+    #: -> OpenSSL::ASN1::Sequence
     def to_asn
       asn_oid = OID.to_asn(@oid)
       type = @type
@@ -27,21 +38,21 @@ module NETSNMP
       asn_val = if type
                   convert_to_asn(type, @value)
                 else
-                  case @value
+                  case value
                   when String
-                    OpenSSL::ASN1::OctetString.new(@value)
+                    OpenSSL::ASN1::OctetString.new(value)
                   when Integer
-                    OpenSSL::ASN1::Integer.new(@value)
+                    OpenSSL::ASN1::Integer.new(value)
                   when true, false
-                    OpenSSL::ASN1::Boolean.new(@value)
+                    OpenSSL::ASN1::Boolean.new(value)
                   when nil
                     OpenSSL::ASN1::Null.new(nil)
                   when IPAddr
                     # @type ivar @value: IPAddr
-                    OpenSSL::ASN1::ASN1Data.new(@value.hton, 0, :APPLICATION)
+                    OpenSSL::ASN1::ASN1Data.new(value.hton, 0, :APPLICATION)
                   when Timetick
                     # @type ivar @value: Timetick
-                    @value.to_asn
+                    value.to_asn
                   else
                     raise Error, "#{@value}: unsupported varbind type"
                   end
@@ -49,6 +60,7 @@ module NETSNMP
       OpenSSL::ASN1::Sequence.new([asn_oid, asn_val])
     end
 
+    #: (varbind_value) -> oid_value
     def convert_val(asn_value)
       case asn_value
       when OpenSSL::ASN1::OctetString
@@ -74,6 +86,8 @@ module NETSNMP
       end
     end
 
+    # @rbs (:ip_address | :counter32 | :counter64 | :uinteger | :gauge | :timetick | :opaque | :nsap, Integer) -> OpenSSL::ASN1::ASN1Data
+    #    | (oid_type, oid_value) -> OpenSSL::ASN1::ASN1Data
     def convert_to_asn(typ, value)
       asn_val = value
 
@@ -113,6 +127,7 @@ module NETSNMP
       OpenSSL::ASN1::ASN1Data.new(asn_val, asn_type, :APPLICATION)
     end
 
+    #: (OpenSSL::ASN1::ASN1Data asn) -> oid_value
     def convert_application_asn(asn)
       raise(OidNotFound, "No Such Instance currently exists at this OID") if asn.value.empty?
 
@@ -134,11 +149,13 @@ module NETSNMP
 
     private
 
+    #: (String) -> Integer
     def unpack_32bit_integer(payload)
       payload.prepend("\x00") until (payload.bytesize % 4).zero?
       payload.unpack("N*")[-1].to_i
     end
 
+    #: (String) -> Integer
     def unpack_64bit_integer(payload)
       payload.prepend("\x00") until (payload.bytesize % 16).zero?
       payload.unpack("NNNN").reduce(0) { |sum, elem| (sum << 32) + elem.to_i }

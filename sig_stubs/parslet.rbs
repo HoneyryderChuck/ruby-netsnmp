@@ -1,0 +1,5 @@
+module Parslet
+  class Parser
+    def parse: (String data) -> Hash[:imports | :declarations, untyped?]
+  end
+end

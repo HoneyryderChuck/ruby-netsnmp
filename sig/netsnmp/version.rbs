@@ -1,0 +1,5 @@
+# Generated from lib/netsnmp/version.rb with RBS::Inline
+
+module NETSNMP
+  VERSION: ::String
+end

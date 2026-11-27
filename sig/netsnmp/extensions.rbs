@@ -1,0 +1,11 @@
+# Generated from lib/netsnmp/extensions.rb with RBS::Inline
+
+module NETSNMP
+  module ASNExtensions
+    ASN_COLORS: Hash[singleton(OpenSSL::ASN1::ASN1Data), Integer]
+
+    # : -> String
+    #  @rbs skip
+    def to_hex: () -> String
+  end
+end

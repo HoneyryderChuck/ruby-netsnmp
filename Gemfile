@@ -18,9 +18,14 @@ end
 platform :mri do
   if RUBY_VERSION >= "3.2.0"
     gem "celluloid-io", "~> 0.17"
-    gem "rbs"
     gem "rubocop"
     gem "rubocop-performance"
+
+    group :types do
+      gem "rbs"
+      gem "rbs-inline", require: false
+      gem "steep", require: false
+    end
   end
 end
 

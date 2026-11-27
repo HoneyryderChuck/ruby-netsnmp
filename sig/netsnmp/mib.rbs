@@ -1,0 +1,70 @@
+# Generated from lib/netsnmp/mib.rb with RBS::Inline
+
+module NETSNMP
+  module MIB
+    type import = { ids: Array[{ name: string }] | { name: string }, name: string }
+
+    OIDREGEX: Regexp
+
+    MIBDIRS: Array[String]
+
+    PARSER: Parser
+
+    self.@parser_mutex: Thread::Mutex
+
+    self.@modules_loaded: Array[String]
+
+    self.@object_identifiers: Hash[String, String]
+
+    # Translates na identifier, such as "sysDescr", into an OID
+    # : (oid) -> String?
+    def self?.oid: (oid) -> String?
+
+    # : (String) -> oid?
+    def self?.identifier: (String) -> oid?
+
+    #
+    #  Loads a MIB. Can be called multiple times, as it'll load it once.
+    #
+    #  Accepts the MIB name in several ways:
+    #
+    #      MIB.load("SNMPv2-MIB")
+    #      MIB.load("SNMPv2-MIB.txt")
+    #      MIB.load("/path/to/SNMPv2-MIB.txt")
+    #
+    # : (String mod) -> bool
+    def self?.load: (String mod) -> bool
+
+    # : (String mod) -> bool
+    def self?.module_loaded?: (String mod) -> bool
+
+    TYPES: Array[String]
+
+    STATIC_MIB_TO_OID: Hash[String, String]
+
+    #
+    #  Loads the MIB all the time, where +mod+ is the absolute path to the MIB.
+    #
+    # : (String mod) -> void
+    def self?.do_load: (String mod) -> void
+
+    # : (String name, Array[String] value, imports: Hash[String, Array[String]]?, declarations: Hash[String, Array[String]]) -> void
+    def self?.store_oid_in_identifiers: (String name, Array[String] value, imports: Hash[String, Array[String]]?, declarations: Hash[String, Array[String]]) -> void
+
+    #
+    #  Reformats the import lists into an hash indexed by module name, to a list of
+    #  imported names
+    #
+    # : (Array[import] | import | nil) -> Hash[String, Array[String]]?
+    def self?.load_imports: (Array[import] | import | nil) -> Hash[String, Array[String]]?
+
+    # : (String) -> bool
+    def self?.integer?: (String) -> bool
+
+    # : -> void
+    def self?.load_defaults: () -> void
+
+    # : -> void
+    def self?.freeze: () -> void
+  end
+end

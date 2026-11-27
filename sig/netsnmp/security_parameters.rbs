@@ -1,0 +1,135 @@
+# Generated from lib/netsnmp/security_parameters.rb with RBS::Inline
+
+module NETSNMP
+  # This module encapsulates the public API for encrypting/decrypting and signing/verifying.
+  #
+  # It doesn't interact with other layers from the library, rather it is used and passed all
+  # the arguments (consisting mostly of primitive types).
+  # It also provides validation of the security options passed with a client is initialized in v3 mode.
+  class SecurityParameters
+    include Loggable
+
+    type security_level = 0 | 1 | 3
+
+    @auth_pass_key: String
+
+    @priv_pass_key: String
+
+    @auth_key: String
+
+    @priv_key: String
+
+    @priv_protocol: priv_protocol?
+
+    @digest: OpenSSL::Digest
+
+    @encryption: (Encryption::AES | Encryption::DES)?
+
+    @timeliness: Integer
+
+    IPAD: String
+
+    OPAD: String
+
+    # Timeliness is part of SNMP V3 Security
+    # The topic is described very nice here https://www.snmpsharpnet.com/?page_id=28
+    # https://www.ietf.org/rfc/rfc2574.txt 1.4.1 Timeliness
+    # The probe is outdated after 150 seconds which results in a PDU Error, therefore it should expire before that and be renewed
+    # The 150 Seconds is specified in https://www.ietf.org/rfc/rfc2574.txt 2.2.3
+    TIMELINESS_THRESHOLD: ::Integer
+
+    attr_reader security_level: Integer
+
+    attr_reader username: String
+
+    attr_reader auth_protocol: auth_protocol?
+
+    attr_reader engine_id: String
+
+    # @param [String] username the snmp v3 username
+    # @param [String] engine_id the device engine id (initialized to '' for report)
+    # @param [Symbol, integer] security_level allowed snmp v3 security level (:auth_priv, :auth_no_priv, etc)
+    # @param [Symbol, nil] auth_protocol a supported authentication protocol (currently supported: :md5, :sha, :sha256)
+    # @param [Symbol, nil] priv_protocol a supported privacy protocol (currently supported: :des, :aes)
+    # @param [String, nil] auth_password the authentication password
+    # @param [String, nil] priv_password the privacy password
+    #
+    # @note if security level is set to :no_auth_no_priv, all other parameters are optional; if
+    #   :auth_no_priv, :auth_protocol will be coerced to :md5 (if not explicitly set), and :auth_password is
+    #   mandatory; if :auth_priv, the sentence before applies, and :priv_protocol will be coerced to :des (if
+    #   not explicitly set), and :priv_password becomes mandatory.
+    #
+    # @rbs username: String
+    # @rbs engine_id: String
+    # @rbs security_level: Integer | :noauth | :auth_no_priv | :auth_priv | nil
+    # @rbs auth_protocol: auth_protocol?
+    # @rbs auth_password: String | nil
+    # @rbs priv_protocol: priv_protocol?
+    # @rbs priv_password: String | nil
+    def initialize: (username: String, ?engine_id: String, ?security_level: Integer | :noauth | :auth_no_priv | :auth_priv | nil, ?auth_protocol: auth_protocol?, ?auth_password: String | nil, ?priv_protocol: priv_protocol?, ?priv_password: String | nil, **untyped options) -> untyped
+
+    # : (String id) -> void
+    def engine_id=: (String id) -> void
+
+    # @param [#to_asn, #to_der] pdu the pdu to encode (must quack like a asn1 type)
+    # @param [String] salt the salt to use
+    # @param [Integer] engine_time the reported engine time
+    # @param [Integer] engine_boots the reported boots time
+    #
+    # @return [Array] a pair, where the first argument in the asn structure with the encoded pdu,
+    #    and the second is the calculated salt (if it has been encrypted)
+    #
+    # : (PDU pdu, salt: OpenSSL::ASN1::ASN1Data, engine_time: Integer, engine_boots: Integer) -> [OpenSSL::ASN1::ASN1Data, OpenSSL::ASN1::ASN1Data]
+    def encode: (PDU pdu, salt: OpenSSL::ASN1::ASN1Data, engine_time: Integer, engine_boots: Integer) -> [ OpenSSL::ASN1::ASN1Data, OpenSSL::ASN1::ASN1Data ]
+
+    # @param [String] der the encoded der to be decoded
+    # @param [String] salt the salt from the incoming der
+    # @param [Integer] engine_time the reported engine time
+    # @param [Integer] engine_boots the reported engine boots
+    #
+    # : (OpenSSL::ASN1::ASN1Data | String der, salt: String, engine_time: Integer, engine_boots: Integer, ?security_level: Integer) -> OpenSSL::ASN1::ASN1Data
+    def decode: (OpenSSL::ASN1::ASN1Data | String der, salt: String, engine_time: Integer, engine_boots: Integer, ?security_level: Integer) -> OpenSSL::ASN1::ASN1Data
+
+    # @param [String] message the already encoded snmp v3 message
+    # @return [String] the digest signature of the message payload
+    #
+    # @note this method is used in the process of authenticating a message
+    #
+    # : (String message) -> String?
+    def sign: (String message) -> String?
+
+    # @param [String] stream the encoded incoming payload
+    # @param [String] salt the incoming payload''s salt
+    #
+    # @raise [NETSNMP::Error] if the message's integration has been violated
+    #
+    # : (String stream, String salt, ?security_level: Integer?) -> void
+    def verify: (String stream, String salt, ?security_level: Integer?) -> void
+
+    # : -> bool
+    def must_revalidate?: () -> bool
+
+    private
+
+    # : -> String
+    def auth_key: () -> String
+
+    # : -> String
+    def priv_key: () -> String
+
+    # : (String key) -> String
+    def localize_key: (String key) -> String
+
+    # : (String password) -> String
+    def passkey: (String password) -> String
+
+    # : -> OpenSSL::Digest
+    def digest: () -> OpenSSL::Digest
+
+    # : -> (Encryption::AES | Encryption::DES)?
+    def encryption: () -> (Encryption::AES | Encryption::DES)?
+
+    # : -> bool
+    def authorizable?: () -> bool
+  end
+end

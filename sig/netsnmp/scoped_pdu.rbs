@@ -1,0 +1,25 @@
+# Generated from lib/netsnmp/scoped_pdu.rb with RBS::Inline
+
+module NETSNMP
+  class ScopedPDU < PDU
+    @context: String?
+
+    attr_reader engine_id: String?
+
+    attr_reader security_level: Integer
+
+    attr_reader auth_param: String
+
+    # @rbs type: Integer
+    # @rbs auth_param: String
+    # @rbs security_level: Integer
+    # @rbs engine_id: String
+    # @rbs context: String
+    def initialize: (type: Integer, ?auth_param: String, ?security_level: Integer, ?engine_id: String, ?context: String, **untyped options) -> untyped
+
+    private
+
+    # : -> [OpenSSL::ASN1::OctetString, OpenSSL::ASN1::OctetString]
+    def encode_headers_asn: () -> [ OpenSSL::ASN1::OctetString, OpenSSL::ASN1::OctetString ]
+  end
+end

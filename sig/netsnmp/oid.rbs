@@ -1,0 +1,20 @@
+# Generated from lib/netsnmp/oid.rb with RBS::Inline
+
+module NETSNMP
+  # Abstracts the OID structure
+  module OID
+    OIDREGEX: Regexp
+
+    # : (oid) -> String
+    def self?.build: (oid) -> String
+
+    # : (String oid) -> OpenSSL::ASN1::ObjectId
+    def self?.to_asn: (String oid) -> OpenSSL::ASN1::ObjectId
+
+    # @param [OID, String] child oid another oid
+    # @return [true, false] whether the given OID belongs to the sub-tree
+    #
+    # : (String oid, String oid) -> bool
+    def self?.parent?: (String oid, String oid) -> bool
+  end
+end
